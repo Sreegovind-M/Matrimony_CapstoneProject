@@ -13,7 +13,8 @@ export class AttendeeGuard implements CanActivate {
   ) {}
 
   canActivate(): boolean {
-    if (this.authService.getRole() === 'ATTENDEE') {
+    const role = this.authService.getRole();
+    if (role === 'ATTENDEE') {
       return true;
     }
     this.router.navigate(['/unauthorized']);

@@ -1,1 +1,76 @@
-<p>navbar works!</p>
+<header class="navbar">
+  <!-- LEFT: BRAND -->
+  <div class="navbar__brand" (click)="navigateToHome()">
+    <span class="material-symbols-outlined navbar__brand-icon">
+      calendar_month
+    </span>
+    <span class="navbar__brand-text">Smart Event Planner</span>
+    <span class="navbar__brand-text--mobile">SEP</span>
+  </div>
+
+  <!-- CENTER: LINKS (DESKTOP ONLY) -->
+  <nav class="navbar__links" *ngIf="role === 'ORGANIZER'">
+    <a class="navbar__link navbar__link--active">Dashboard</a>
+    <a class="navbar__link">My Events</a>
+    <a class="navbar__link">Attendees</a>
+  </nav>
+
+  <nav class="navbar__links" *ngIf="role === 'ATTENDEE'">
+    <a class="navbar__link navbar__link--active">Browse Events</a>
+    <a class="navbar__link">My Bookings</a>
+    <a class="navbar__link">Favorites</a>
+  </nav>
+
+  <!-- RIGHT: ACTIONS -->
+  <div class="navbar__actions">
+    <button *ngIf="role === 'ORGANIZER'" class="navbar__create-button">
+      <span class="material-symbols-outlined">add</span>
+      Create Event
+    </button>
+
+    <span class="navbar__role-badge">
+      {{ role === "ORGANIZER" ? "Organizer" : "Attendee" }}
+    </span>
+
+    <div
+      class="navbar__avatar"
+      [ngStyle]="{
+        'background-image':
+          role === 'ORGANIZER'
+            ? 'url(assets/avatar-organizer.png)'
+            : 'url(assets/avatar-attendee.png)'
+      }"
+    ></div>
+
+    <button class="navbar__logout" (click)="logout()">
+      <span class="material-symbols-outlined">logout</span>
+    </button>
+
+    <!-- MOBILE MENU BUTTON -->
+    <button class="navbar__menu-button" (click)="toggleMobileMenu()">
+      <span class="material-symbols-outlined">
+        {{ isMobileMenuOpen ? "close" : "menu" }}
+      </span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE MENU PANEL -->
+<div class="navbar__mobile-menu" *ngIf="isMobileMenuOpen">
+  <ng-container *ngIf="role === 'ORGANIZER'">
+    <!-- Create Event (Organizer – Mobile only) -->
+    <a class="navbar__mobile-link navbar__mobile-link--primary">
+      + Create Event
+    </a>
+
+    <a class="navbar__mobile-link" (click)="closeMobileMenu()">Dashboard</a>
+    <a class="navbar__mobile-link" (click)="closeMobileMenu()">My Events</a>
+    <a class="navbar__mobile-link" (click)="closeMobileMenu()">Attendees</a>
+  </ng-container>
+
+  <ng-container *ngIf="role === 'ATTENDEE'">
+    <a class="navbar__mobile-link" (click)="closeMobileMenu()">Browse Events</a>
+    <a class="navbar__mobile-link" (click)="closeMobileMenu()">My Bookings</a>
+    <a class="navbar__mobile-link" (click)="closeMobileMenu()">Favorites</a>
+  </ng-container>
+</div>
