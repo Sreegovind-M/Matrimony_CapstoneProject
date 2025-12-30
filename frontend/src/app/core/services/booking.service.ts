@@ -1,9 +1,25 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Booking } from '../models/booking.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingService {
 
-  constructor() { }
+  private baseUrl = 'http://localhost:3000/api/bookings';
+
+  constructor(private http: HttpClient) {}
+
+  bookTickets(data: {
+    eventId: number;
+    seats: number;
+  }): Observable<Booking> {
+    return this.http.post<Booking>(this.baseUrl, data);
+  }
+
+  getBookingById(id: number): Observable<Booking> {
+    return this.http.get<Booking>(`${this.baseUrl}/${id}`);
+  }
 }

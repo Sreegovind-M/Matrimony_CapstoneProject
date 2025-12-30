@@ -1,12 +1,23 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-unauthorized',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './unauthorized.component.html',
-  styleUrl: './unauthorized.component.css'
+  styleUrls: ['./unauthorized.component.css']
 })
 export class UnauthorizedComponent {
 
+  constructor(private router: Router) {}
+
+  goToLogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  goToHome(): void {
+    this.router.navigate(['/']);
+  }
 }

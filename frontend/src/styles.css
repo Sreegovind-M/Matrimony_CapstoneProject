@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
