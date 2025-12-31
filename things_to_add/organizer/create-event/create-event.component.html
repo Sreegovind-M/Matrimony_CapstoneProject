@@ -1,0 +1,166 @@
+<app-navbar></app-navbar>
+
+<div class="create-event-container">
+  <div class="create-event-wrapper">
+    <!-- HEADER -->
+    <div class="create-event-header">
+      <h1>Create New Event</h1>
+      <p>Fill in the details below to create a new event</p>
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+    <div *ngIf="success" class="success-alert">
+      <span class="material-symbols-outlined">check_circle</span>
+      Event created successfully! Redirecting...
+    </div>
+
+    <!-- ERROR MESSAGE -->
+    <div *ngIf="error" class="error-alert">
+      <span class="material-symbols-outlined">error</span>
+      {{ error }}
+    </div>
+
+    <!-- FORM -->
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <!-- EVENT NAME -->
+        <div class="form-group">
+          <label for="name" class="form-label">
+            Event Name <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            class="form-input"
+            formControlName="name"
+            placeholder="e.g., Sarah & John's Wedding"
+            [class.input-error]="eventForm.get('name')?.touched && eventForm.get('name')?.invalid"
+          />
+          <div class="error-text" *ngIf="eventForm.get('name')?.touched && eventForm.get('name')?.invalid">
+            {{ getFieldError('name') }}
+          </div>
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="form-group">
+          <label for="category" class="form-label">
+            Category <span class="required">*</span>
+          </label>
+          <select
+            id="category"
+            class="form-input"
+            formControlName="category"
+          >
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+
+        <!-- VENUE -->
+        <div class="form-group col-span-2">
+          <label for="venue" class="form-label">
+            Venue <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="venue"
+            class="form-input"
+            formControlName="venue"
+            placeholder="e.g., Grand Ballroom, New Delhi"
+            [class.input-error]="eventForm.get('venue')?.touched && eventForm.get('venue')?.invalid"
+          />
+          <div class="error-text" *ngIf="eventForm.get('venue')?.touched && eventForm.get('venue')?.invalid">
+            {{ getFieldError('venue') }}
+          </div>
+        </div>
+
+        <!-- DATE & TIME -->
+        <div class="form-group">
+          <label for="date_time" class="form-label">
+            Date & Time <span class="required">*</span>
+          </label>
+          <input
+            type="datetime-local"
+            id="date_time"
+            class="form-input"
+            formControlName="date_time"
+            [class.input-error]="eventForm.get('date_time')?.touched && eventForm.get('date_time')?.invalid"
+          />
+          <div class="error-text" *ngIf="eventForm.get('date_time')?.touched && eventForm.get('date_time')?.invalid">
+            {{ getFieldError('date_time') }}
+          </div>
+        </div>
+
+        <!-- CAPACITY -->
+        <div class="form-group">
+          <label for="capacity" class="form-label">
+            Capacity <span class="required">*</span>
+          </label>
+          <input
+            type="number"
+            id="capacity"
+            class="form-input"
+            formControlName="capacity"
+            min="1"
+            placeholder="100"
+            [class.input-error]="eventForm.get('capacity')?.touched && eventForm.get('capacity')?.invalid"
+          />
+          <div class="error-text" *ngIf="eventForm.get('capacity')?.touched && eventForm.get('capacity')?.invalid">
+            {{ getFieldError('capacity') }}
+          </div>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="form-group col-span-2">
+          <label for="description" class="form-label">
+            Description <span class="required">*</span>
+          </label>
+          <textarea
+            id="description"
+            class="form-textarea"
+            formControlName="description"
+            placeholder="Describe your event in detail..."
+            rows="5"
+            [class.input-error]="eventForm.get('description')?.touched && eventForm.get('description')?.invalid"
+          ></textarea>
+          <div class="error-text" *ngIf="eventForm.get('description')?.touched && eventForm.get('description')?.invalid">
+            {{ getFieldError('description') }}
+          </div>
+          <div class="char-count">
+            {{ eventForm.get('description')?.value?.length || 0 }} characters
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!isFormValid || loading"
+        >
+          <span *ngIf="!loading" class="material-symbols-outlined">check</span>
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? 'Creating...' : 'Create Event' }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="resetForm()"
+          [disabled]="loading"
+        >
+          <span class="material-symbols-outlined">refresh</span>
+          Reset
+        </button>
+        <button
+          type="button"
+          class="btn btn-tertiary"
+          (click)="goBack()"
+          [disabled]="loading"
+        >
+          <span class="material-symbols-outlined">arrow_back</span>
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
