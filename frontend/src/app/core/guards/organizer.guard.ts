@@ -13,10 +13,10 @@ export class OrganizerGuard implements CanActivate {
   ) {}
 
   canActivate(): boolean {
-    if (this.authService.getRole() === 'ORGANIZER') {
-      return true;
-    }
-    this.router.navigate(['/unauthorized']);
-    return false;
+    const role = this.authService.getRole();
+    if (role === 'ORGANIZER') return true;
+this.router.navigate(['/unauthorized']);
+return false;
+
   }
 }
