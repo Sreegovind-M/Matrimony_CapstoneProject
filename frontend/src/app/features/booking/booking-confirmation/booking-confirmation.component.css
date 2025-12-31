@@ -1,0 +1,121 @@
+.booking__confirmation {
+  min-height: 100vh;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+/* CARD */
+.booking__confirmation__card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ICON */
+.booking__confirmation__icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #2ec4b6;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.booking__confirmation__icon span {
+  font-size: 40px;
+}
+
+/* TEXT */
+.booking__confirmation__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2a44;
+}
+
+.booking__confirmation__subtitle {
+  color: #495057;
+  margin: 8px 0 24px;
+}
+
+/* SUMMARY */
+.booking__confirmation__summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  text-align: left;
+  margin-bottom: 32px;
+}
+
+.booking__confirmation__item label {
+  font-size: 12px;
+  color: #6c757d;
+  text-transform: uppercase;
+}
+
+.booking__confirmation__item span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2a44;
+}
+
+/* ACTIONS */
+.booking__confirmation__actions {
+  display: flex;
+  gap: 16px;
+}
+
+.booking__confirmation__actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.booking__confirmation__actions .primary {
+  background: #2ec4b6;
+  color: #fff;
+  border: none;
+}
+
+.booking__confirmation__actions .secondary {
+  background: transparent;
+  border: 1px solid #2ec4b6;
+  color: #2ec4b6;
+}
+
+/* ERROR */
+.booking__confirmation__error {
+  text-align: center;
+}
+
+.booking__confirmation__error span {
+  font-size: 48px;
+  color: #e63946;
+}
+
+/* LOADING */
+.booking__confirmation__skeleton-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #e9ecef;
+  margin-bottom: 16px;
+}
+
+.booking__confirmation__skeleton-card {
+  width: 600px;
+  height: 300px;
+  background: #e9ecef;
+  border-radius: 16px;
+}
