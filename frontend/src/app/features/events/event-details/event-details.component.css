@@ -1,0 +1,181 @@
+.event-details {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* ================= HERO ================= */
+
+.event-hero {
+  height: 220px;
+  border-radius: 16px;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.event-hero__badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: #ffffff;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1f2a44;
+}
+
+/* Category patterns */
+.event-hero--conference {
+  background-color: #e6f0f9;
+  background-image: radial-gradient(#1f2a44 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.event-hero--workshop {
+  background-color: #e0f2f1;
+  background-image: repeating-linear-gradient(
+    45deg,
+    #2ec4b6 0,
+    #2ec4b6 10px,
+    transparent 10px,
+    transparent 20px
+  );
+}
+
+.event-hero--seminar {
+  background-color: #f3f4f6;
+  background-image: repeating-linear-gradient(
+    45deg,
+    #cfd8dc 0,
+    #cfd8dc 2px,
+    transparent 2px,
+    transparent 12px
+  );
+}
+
+.event-hero--default {
+  background: #f8f9fa;
+}
+
+/* ================= CONTENT ================= */
+
+.event-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #ebecf0;
+  overflow: hidden;
+}
+
+.event-content {
+  padding: 2rem;
+}
+
+.event-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1f2a44;
+}
+
+.event-meta {
+  display: flex;
+  gap: 1.5rem;
+  color: #495057;
+  margin: 1rem 0 2rem;
+}
+
+/* Sections */
+.event-section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-section p {
+  color: #495057;
+  line-height: 1.6;
+}
+
+.event-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.event-info__item {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+/* Actions */
+.event-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ================= BUTTONS ================= */
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+}
+
+.btn--primary {
+  background: #1f2a44;
+  color: #ffffff;
+}
+
+.btn--secondary {
+  background: transparent;
+  border: 2px solid #1f2a44;
+  color: #1f2a44;
+}
+
+.btn--accent {
+  background: #2ec4b6;
+  color: #ffffff;
+}
+
+/* ================= STATES ================= */
+
+.event-state {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.event-state__icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.event-state__actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Skeletons */
+.skeleton {
+  background: #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.skeleton.hero {
+  height: 220px;
+}
+
+.skeleton.title {
+  height: 32px;
+  width: 70%;
+}
+
+.skeleton.text {
+  height: 14px;
+  width: 100%;
+}

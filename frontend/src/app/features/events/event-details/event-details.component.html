@@ -1,1 +1,71 @@
 <app-navbar></app-navbar>
+<section class="event-details">
+  <!-- ================= LOADING STATE ================= -->
+  <div *ngIf="loading" class="event-state event-state--loading">
+    <div class="skeleton hero"></div>
+    <div class="skeleton title"></div>
+    <div class="skeleton text"></div>
+    <div class="skeleton text"></div>
+  </div>
+
+  <!-- ================= ERROR STATE ================= -->
+  <div *ngIf="error" class="event-state event-state--error">
+    <div class="event-state__icon">!</div>
+    <h3>Failed to load event details</h3>
+    <p>Please check your connection and try again.</p>
+    <div class="event-state__actions">
+      <button class="btn btn--secondary" (click)="goBack()">Go Back</button>
+      <button class="btn btn--primary" (click)="retry()">Retry</button>
+    </div>
+  </div>
+
+  <!-- ================= NOT FOUND STATE ================= -->
+  <div *ngIf="notFound" class="event-state event-state--empty">
+    <div class="event-state__icon">×</div>
+    <h3>Event Not Found</h3>
+    <p>This event does not exist or may have been removed.</p>
+    <button class="btn btn--primary" (click)="goBack()">Back to Events</button>
+  </div>
+
+  <!-- ================= SUCCESS STATE ================= -->
+  <div *ngIf="event" class="event-card">
+    <!-- Hero -->
+    <div class="event-hero" [ngClass]="getCategoryClass(event.category)">
+      <span class="event-hero__badge">{{ event.category }}</span>
+    </div>
+
+    <!-- Content -->
+    <div class="event-content">
+      <h1 class="event-title">{{ event.name }}</h1>
+
+      <div class="event-meta">
+        <span>{{ event.date_time | date : "medium" }}</span>
+        <span>{{ event.venue }}</span>
+      </div>
+
+      <section class="event-section">
+        <h2>About this event</h2>
+        <p>{{ event.description }}</p>
+      </section>
+
+      <section class="event-info">
+        <div class="event-info__item">
+          <strong>Category</strong>
+          <span>{{ event.category }}</span>
+        </div>
+
+        <div class="event-info__item">
+          <strong>Capacity</strong>
+          <span>{{ event.capacity }} attendees</span>
+        </div>
+      </section>
+
+      <div class="event-actions">
+        <button class="btn btn--secondary" (click)="goBack()">
+          Back to Events
+        </button>
+        <button class="btn btn--accent">Book Tickets</button>
+      </div>
+    </div>
+  </div>
+</section>
