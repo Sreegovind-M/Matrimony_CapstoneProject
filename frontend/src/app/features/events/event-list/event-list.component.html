@@ -1,1 +1,95 @@
 <app-navbar></app-navbar>
+<section class="event-list">
+  <!-- HEADER -->
+  <header class="event-list__header">
+    <h1 class="event-list__title">Upcoming Events</h1>
+    <p class="event-list__subtitle">
+      Discover and explore upcoming events happening near you.
+    </p>
+  </header>
+
+  <!-- LOADING STATE -->
+  <div *ngIf="loading" class="event-list__grid">
+    <div
+      class="event-card event-card--skeleton"
+      *ngFor="let i of [1, 2, 3, 4, 5, 6]"
+    ></div>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div *ngIf="error" class="event-list__state">
+    <div class="event-list__error-card">
+      <div class="event-list__error-icon">!</div>
+
+      <h3 class="event-list__error-title">Failed to load events</h3>
+
+      <p class="event-list__error-text">
+        Something went wrong while fetching the event data. Please try again.
+      </p>
+
+      <button class="event-list__retry-button" (click)="fetchEvents()">
+        Retry
+      </button>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div
+    *ngIf="!loading && !error && events.length === 0"
+    class="event-list__state"
+  >
+    <div class="event-list__empty-card">
+      <div class="event-list__empty-icon">📅</div>
+
+      <h3 class="event-list__empty-title">No events available</h3>
+
+      <p class="event-list__empty-text">
+        We couldn’t find any upcoming events at the moment. Please check back
+        later.
+      </p>
+    </div>
+  </div>
+
+  <!-- EVENTS GRID -->
+  <div *ngIf="!loading && !error && events.length > 0" class="event-list__grid">
+    <article class="event-card" *ngFor="let event of events">
+      <!-- CATEGORY IMAGE -->
+      <div
+        class="event-card__media"
+        [ngClass]="getCategoryClass(event.category)"
+      >
+        <span class="event-card__badge">
+          {{ event.category | uppercase }}
+        </span>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="event-card__content">
+        <h3 class="event-card__name">
+          {{ event.name }}
+        </h3>
+
+        <div class="event-card__meta">
+          <span>
+            {{ event.date_time | date : "MMM dd, yyyy • hh:mm a" }}
+          </span>
+          <span>
+            {{ event.venue }}
+          </span>
+        </div>
+
+        <p class="event-card__description">
+          {{ event.description }}
+        </p>
+
+        <div class="event-card__footer">
+          <span class="event-card__capacity">
+            Capacity: {{ event.capacity }}
+          </span>
+
+          <button class="event-card__button">View Details</button>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
