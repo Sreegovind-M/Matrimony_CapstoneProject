@@ -1,9 +1,11 @@
-// event.model.ts
 export interface Event {
   id: number;
-  title: string;
+  organizer_id: number;
+  name: string;
   description: string;
-  date: string;          // ISO string from backend
-  location: string;
-  availableSeats: number;
+  venue: string;
+  date_time: string;
+  category: string;
+  capacity: number;
+  created_at: string;
 }

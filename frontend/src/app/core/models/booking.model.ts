@@ -1,7 +1,8 @@
-// booking.model.ts
 export interface Booking {
   id: number;
-  eventId: number;
-  seatsBooked: number;
-  bookingDate: string;
+  event_id: number;
+  attendee_id: number;
+  tickets_booked: number;
+  total_price: number;
+  booking_time: string;
 }
