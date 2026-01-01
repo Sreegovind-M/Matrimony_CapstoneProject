@@ -49,6 +49,7 @@
   color: #495057;
   cursor: pointer;
   padding-bottom: 4px;
+  text-decoration: none;
   transition: 0.3s all;
 }
 

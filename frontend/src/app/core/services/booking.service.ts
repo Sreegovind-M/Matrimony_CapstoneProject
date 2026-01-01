@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Booking } from '../models/booking.model';
 
 @Injectable({
@@ -38,5 +39,10 @@ export class BookingService {
         return of([]);
       })
     );
+    return this.http.post<Booking>(this.baseUrl, data);
+  }
+
+  getBookingById(id: number): Observable<Booking> {
+    return this.http.get<Booking>(`${this.baseUrl}/${id}`);
   }
 }
