@@ -4,8 +4,6 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { Router } from '@angular/router';
 import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 import { EventService } from '../../../core/services/event.service';
-import { Component } from '@angular/core';
-import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-create-event',
