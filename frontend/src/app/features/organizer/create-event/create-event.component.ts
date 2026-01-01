@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 import { EventService } from '../../../core/services/event.service';
-import { Component } from '@angular/core';
 import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 
 @Component({

@@ -60,6 +60,7 @@
 
 .navbar__link:hover {
   color: #1f2a44;
+  border-bottom: 3px solid #2ec4b6;
   transition: 0.3s all;
 }
 
@@ -142,6 +143,7 @@
   font-size: 14px;
   font-weight: 500;
   color: #1f2a44;
+  text-decoration: none;
   border-radius: 6px;
 }
 
