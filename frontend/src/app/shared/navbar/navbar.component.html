@@ -10,8 +10,8 @@
 
   <!-- CENTER: LINKS (DESKTOP ONLY) -->
   <nav class="navbar__links" *ngIf="role === 'ORGANIZER'">
-    <a class="navbar__link navbar__link--active">Dashboard</a>
-    <a class="navbar__link">My Events</a>
+    <a class="navbar__link" routerLink="/organizer/dashboard" routerLinkActive="navbar__link--active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+    <a class="navbar__link" routerLink="/organizer/my-events" routerLinkActive="navbar__link--active" [routerLinkActiveOptions]="{ exact: true }">My Events</a>
     <a class="navbar__link">Attendees</a>
   </nav>
 
@@ -23,7 +23,7 @@
 
   <!-- RIGHT: ACTIONS -->
   <div class="navbar__actions">
-    <button *ngIf="role === 'ORGANIZER'" class="navbar__create-button">
+    <button *ngIf="role === 'ORGANIZER'" type="button" class="navbar__create-button" (click)="navigateToCreateEvent()">
       <span class="material-symbols-outlined">add</span>
       Create Event
     </button>
@@ -59,12 +59,12 @@
 <div class="navbar__mobile-menu" *ngIf="isMobileMenuOpen">
   <ng-container *ngIf="role === 'ORGANIZER'">
     <!-- Create Event (Organizer – Mobile only) -->
-    <a class="navbar__mobile-link navbar__mobile-link--primary">
+    <a class="navbar__mobile-link navbar__mobile-link--primary" routerLink="/organizer/create-event" (click)="closeMobileMenu()">
       + Create Event
     </a>
 
-    <a class="navbar__mobile-link" (click)="closeMobileMenu()">Dashboard</a>
-    <a class="navbar__mobile-link" (click)="closeMobileMenu()">My Events</a>
+    <a class="navbar__mobile-link" routerLink="/organizer/dashboard" (click)="closeMobileMenu()">Dashboard</a>
+    <a class="navbar__mobile-link" routerLink="/organizer/my-events" (click)="closeMobileMenu()">My Events</a>
     <a class="navbar__mobile-link" (click)="closeMobileMenu()">Attendees</a>
   </ng-container>
 

@@ -1,1 +1,141 @@
 <app-navbar></app-navbar>
+
+<div class="create-event-container">
+  <div class="create-event-wrapper">
+    <div class="create-event-header">
+      <h1>Create New Event</h1>
+      <p>Fill in the details to create and publish your event</p>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="success" class="alert alert-success">
+      ✓ Event created successfully! Redirecting...
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="alert alert-error">
+      ✗ {{ error }}
+    </div>
+
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="create-event-form">
+      <!-- Event Name -->
+      <div class="form-group">
+        <label for="name" class="form-label">Event Name *</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-input"
+          placeholder="Enter event name"
+          [class.is-invalid]="f['name'].invalid && (f['name'].dirty || f['name'].touched)"
+        />
+        <div *ngIf="f['name'].invalid && (f['name'].dirty || f['name'].touched)" class="error-message">
+          <span *ngIf="f['name'].hasError('required')">Event name is required</span>
+          <span *ngIf="f['name'].hasError('minlength')">Event name must be at least 3 characters</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description" class="form-label">Description *</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          class="form-textarea"
+          placeholder="Enter event description"
+          rows="4"
+          [class.is-invalid]="f['description'].invalid && (f['description'].dirty || f['description'].touched)"
+        ></textarea>
+        <div *ngIf="f['description'].invalid && (f['description'].dirty || f['description'].touched)" class="error-message">
+          <span *ngIf="f['description'].hasError('required')">Description is required</span>
+          <span *ngIf="f['description'].hasError('minlength')">Description must be at least 10 characters</span>
+        </div>
+      </div>
+
+      <!-- Venue -->
+      <div class="form-group">
+        <label for="venue" class="form-label">Venue/Location *</label>
+        <input
+          type="text"
+          id="venue"
+          formControlName="venue"
+          class="form-input"
+          placeholder="Enter venue or location"
+          [class.is-invalid]="f['venue'].invalid && (f['venue'].dirty || f['venue'].touched)"
+        />
+        <div *ngIf="f['venue'].invalid && (f['venue'].dirty || f['venue'].touched)" class="error-message">
+          <span>Venue is required</span>
+        </div>
+      </div>
+
+      <!-- Date and Time -->
+      <div class="form-group">
+        <label for="date_time" class="form-label">Date & Time *</label>
+        <input
+          type="datetime-local"
+          id="date_time"
+          formControlName="date_time"
+          class="form-input"
+          [class.is-invalid]="f['date_time'].invalid && (f['date_time'].dirty || f['date_time'].touched)"
+        />
+        <div *ngIf="f['date_time'].invalid && (f['date_time'].dirty || f['date_time'].touched)" class="error-message">
+          <span>Date and time are required</span>
+        </div>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="category" class="form-label">Category *</label>
+        <select
+          id="category"
+          formControlName="category"
+          class="form-input"
+          [class.is-invalid]="f['category'].invalid && (f['category'].dirty || f['category'].touched)"
+        >
+          <option value="">Select a category</option>
+          <option value="Wedding">Wedding</option>
+          <option value="Engagement">Engagement</option>
+          <option value="Birthday">Birthday</option>
+          <option value="Corporate">Corporate</option>
+          <option value="Conference">Conference</option>
+          <option value="Workshop">Workshop</option>
+          <option value="Seminar">Seminar</option>
+          <option value="Other">Other</option>
+        </select>
+        <div *ngIf="f['category'].invalid && (f['category'].dirty || f['category'].touched)" class="error-message">
+          <span>Category is required</span>
+        </div>
+      </div>
+
+      <!-- Capacity -->
+      <div class="form-group">
+        <label for="capacity" class="form-label">Capacity (Number of Attendees) *</label>
+        <input
+          type="number"
+          id="capacity"
+          formControlName="capacity"
+          class="form-input"
+          placeholder="Enter event capacity"
+          min="1"
+          [class.is-invalid]="f['capacity'].invalid && (f['capacity'].dirty || f['capacity'].touched)"
+        />
+        <div *ngIf="f['capacity'].invalid && (f['capacity'].dirty || f['capacity'].touched)" class="error-message">
+          <span *ngIf="f['capacity'].hasError('required')">Capacity is required</span>
+          <span *ngIf="f['capacity'].hasError('min')">Capacity must be at least 1</span>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          <span *ngIf="loading">Creating...</span>
+          <span *ngIf="!loading">Create Event</span>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()" [disabled]="loading">
+          Reset
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<app-navbar></app-navbar>

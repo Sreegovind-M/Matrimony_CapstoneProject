@@ -49,6 +49,8 @@
   color: #495057;
   cursor: pointer;
   padding-bottom: 4px;
+  text-decoration: none;
+  transition: 0.3s all;
 }
 
 .navbar__link--active {
@@ -58,8 +60,7 @@
 
 .navbar__link:hover {
   color: #1f2a44;
-  border-bottom: 3px solid #2ec4b6;
-  transition: 0.5s all;
+  transition: 0.3s all;
 }
 
 /* ===== ACTIONS ===== */
@@ -81,6 +82,17 @@
   font-weight: 700;
   border-radius: 6px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.navbar__create-button:hover {
+  background-color: #2ec4b6;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(46, 196, 182, 0.3);
+}
+
+.navbar__create-button:active {
+  transform: scale(0.98);
 }
 
 .navbar__role-badge {

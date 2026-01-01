@@ -41,6 +41,11 @@ export class NavbarComponent {
     }
   }
 
+  navigateToCreateEvent(): void {
+    this.closeMobileMenu();
+    this.router.navigate(['/organizer/create-event']);
+  }
+
   /**
    * IMPORTANT:
    * Automatically close mobile menu when switching to desktop
