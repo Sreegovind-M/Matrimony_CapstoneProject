@@ -1,1 +1,85 @@
-<p>ticket-booking works!</p>
+<app-navbar></app-navbar>
+<section class="ticket__booking" *ngIf="!isLoading && event">
+  <header class="ticket__booking__header">
+    <h2 class="ticket__booking__title">Book Tickets</h2>
+    <p class="ticket__booking__subtitle">
+      Confirm booking for <strong>{{ event.name }}</strong>
+    </p>
+  </header>
+
+  <!-- Error -->
+  <div class="ticket__booking__error" *ngIf="errorMessage">
+    <span class="material-symbols-outlined">error</span>
+    {{ errorMessage }}
+  </div>
+
+  <!-- Event Summary -->
+  <article class="ticket__booking__event">
+    <div
+      class="ticket__booking__event-image
+             ticket__booking__event-image--{{ event.category | lowercase }}"
+    ></div>
+
+    <div class="ticket__booking__event-info">
+      <div class="ticket__booking__meta">
+        <span class="ticket__booking__category">
+          {{ event.category }}
+        </span>
+        <span class="ticket__booking__capacity">
+          Capacity: {{ event.capacity }}
+        </span>
+      </div>
+
+      <h3 class="ticket__booking__event-title">
+        {{ event.name }}
+      </h3>
+
+      <p class="ticket__booking__detail">
+        <span class="material-symbols-outlined">calendar_today</span>
+        {{ event.date_time | date : "medium" }}
+      </p>
+
+      <p class="ticket__booking__detail">
+        <span class="material-symbols-outlined">location_on</span>
+        {{ event.venue }}
+      </p>
+    </div>
+  </article>
+
+  <!-- Booking Form -->
+  <div class="ticket__booking__form">
+    <label class="ticket__booking__label"> Number of Tickets </label>
+
+    <input
+      class="ticket__booking__input"
+      type="number"
+      min="1"
+      [(ngModel)]="ticketCount"
+    />
+
+    <small class="ticket__booking__hint">
+      Availability will be confirmed during booking
+    </small>
+
+    <div class="ticket__booking__actions">
+      <button
+        class="ticket__booking__button ticket__booking__button--primary"
+        (click)="onConfirmBooking()"
+        [disabled]="isSubmitting"
+      >
+        {{ isSubmitting ? "Booking..." : "Confirm Booking" }}
+      </button>
+
+      <button
+        class="ticket__booking__button ticket__booking__button--secondary"
+        (click)="onBack()"
+      >
+        Back to Event
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="ticket__booking__loading" *ngIf="isLoading">
+  Loading booking details...
+</div>

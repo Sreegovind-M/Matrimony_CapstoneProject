@@ -1,1 +1,82 @@
-<p>unauthorized works!</p>
+<section class="unauthorized">
+  <!-- Top Navigation -->
+  <header class="unauthorized__header">
+    <div class="unauthorized__brand">
+      <span class="material-symbols-outlined unauthorized__brand-icon">
+        event_available
+      </span>
+      <span class="unauthorized__brand-text">Smart Event Planner</span>
+    </div>
+
+    <button class="unauthorized__support-button">
+      Contact Support
+    </button>
+  </header>
+
+  <!-- Main Content -->
+  <main class="unauthorized__content">
+    <div class="unauthorized__background unauthorized__background--left"></div>
+    <div class="unauthorized__background unauthorized__background--right"></div>
+
+    <div class="unauthorized__card">
+      <!-- Icon -->
+      <div class="unauthorized__icon-wrapper">
+        <div class="unauthorized__icon-ring">
+          <span class="material-symbols-outlined unauthorized__lock-icon">
+            lock
+          </span>
+        </div>
+        <div class="unauthorized__status-indicator">
+          <span class="material-symbols-outlined">close</span>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <h1 class="unauthorized__title">Access Restricted</h1>
+      <p class="unauthorized__message">
+        You don’t have permission to view this page.
+        Please log in with an appropriate role to continue.
+      </p>
+
+      <!-- Actions -->
+      <div class="unauthorized__actions">
+        <button
+          class="unauthorized__login-button"
+          (click)="goToLogin()"
+        >
+          Go to Login
+          <span class="material-symbols-outlined">
+            arrow_forward
+          </span>
+        </button>
+
+        <button
+          class="unauthorized__home-link"
+          (click)="goToHome()"
+        >
+          <span class="material-symbols-outlined">
+            arrow_back
+          </span>
+          Return to Home
+        </button>
+      </div>
+
+      <!-- Error Code -->
+      <div class="unauthorized__error-code">
+        Error Code: 403_FORBIDDEN
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="unauthorized__footer">
+    <div class="unauthorized__footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Help Center</a>
+    </div>
+    <p class="unauthorized__copyright">
+      © 2025 Smart Event Planner. All rights reserved.
+    </p>
+  </footer>
+</section>

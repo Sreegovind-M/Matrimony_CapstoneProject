@@ -1,12 +1,60 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BookingService } from '../../../core/services/booking.service';
+import { Booking } from '../../../core/models/booking.model';
+import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-booking-confirmation',
   standalone: true,
-  imports: [],
+  imports: [NavbarComponent],
   templateUrl: './booking-confirmation.component.html',
-  styleUrl: './booking-confirmation.component.css'
+  styleUrls: ['./booking-confirmation.component.css']
 })
-export class BookingConfirmationComponent {
+export class BookingConfirmationComponent implements OnInit {
 
+  bookingId!: number;
+  booking!: Booking;
+
+  isLoading = true;
+  hasError = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private bookingService: BookingService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.bookingId = Number(this.route.snapshot.paramMap.get('bookingId'));
+    this.fetchBooking();
+  }
+
+  fetchBooking(): void {
+    this.isLoading = true;
+    this.hasError = false;
+
+    this.bookingService.getBookingById(this.bookingId).subscribe({
+      next: (res) => {
+        this.booking = res;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.hasError = true;
+        this.isLoading = false;
+      }
+    });
+  }
+
+  goToBookings(): void {
+    this.router.navigate(['/my-bookings']);
+  }
+
+  browseEvents(): void {
+    this.router.navigate(['/events']);
+  }
+
+  retry(): void {
+    this.fetchBooking();
+  }
 }

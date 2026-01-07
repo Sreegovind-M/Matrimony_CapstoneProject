@@ -1,0 +1,184 @@
+/* ===== BLOCK ===== */
+.login {
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, #e9f7f5, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, sans-serif;
+}
+
+/* ===== LAYOUT ===== */
+.login__container {
+  width: 100%;
+  max-width: 420px;
+  padding: 16px;
+  text-align: center;
+}
+
+/* ===== CARD ===== */
+.login__card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 32px 28px;
+  box-shadow: 0 20px 40px rgba(31, 42, 68, 0.08);
+}
+
+/* ===== ICON ===== */
+.login__app-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 14px;
+  background-color: #1f2a44;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== TITLE ===== */
+.login__title {
+  margin: 0;
+  font-size: 22px;
+  color: #1f2a44;
+}
+
+.login__subtitle {
+  margin: 6px 0 20px;
+  font-size: 14px;
+  color: #495057;
+}
+
+/* ===== ROLE SELECT ===== */
+.login__role-heading {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6c757d;
+  margin-bottom: 10px;
+}
+
+.login__role-options {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.login__role-button {
+  flex: 1;
+  border: 1.5px solid #dee2e6;
+  border-radius: 12px;
+  padding: 10px 6px;
+  background-color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  color: #495057;
+  cursor: pointer;
+}
+
+.login__role-button span {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.login__role-button--active {
+  border-color: #2ec4b6;
+  background-color: #ecfbf9;
+  color: #2ec4b6;
+}
+
+/* ===== FORM ===== */
+.login__form {
+  text-align: left;
+}
+
+.login__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2a44;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.login__input-group {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.login__input-group span {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #adb5bd;
+}
+
+.login__input {
+  width: 100%;
+  padding: 12px 40px;
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  font-size: 14px;
+}
+
+.login__visibility-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #adb5bd;
+}
+
+/* ===== FORGOT ===== */
+.login__forgot {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.login__forgot a {
+  font-size: 12px;
+  color: #2ec4b6;
+  text-decoration: none;
+}
+
+/* ===== SUBMIT ===== */
+.login__submit {
+  width: 100%;
+  background-color: #2ec4b6;
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login__submit:hover {
+  background-color: #25a89b;
+}
+
+/* ===== FOOTER ===== */
+.login__footer {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #495057;
+}
+
+.login__footer a {
+  font-weight: 700;
+  color: #1f2a44;
+  text-decoration: none;
+}
+
+/* ===== COPYRIGHT ===== */
+.login__copyright {
+  margin-top: 16px;
+  font-size: 12px;
+  color: #adb5bd;
+}

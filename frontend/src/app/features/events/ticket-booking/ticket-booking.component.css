@@ -1,0 +1,100 @@
+.ticket__booking {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+.ticket__booking__title {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.ticket__booking__subtitle {
+  color: #495057;
+  margin-bottom: 24px;
+}
+
+.ticket__booking__error {
+  display: flex;
+  gap: 8px;
+  background: #fdecea;
+  color: #e63946;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.ticket__booking__event {
+  display: flex;
+  background: #ffffff;
+  border: 1px solid #e9f2f1;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.ticket__booking__event-image {
+  width: 160px;
+}
+
+.ticket__booking__event-image--conference {
+  background: #1f2a44;
+}
+.ticket__booking__event-image--workshop {
+  background: #2ec4b6;
+}
+.ticket__booking__event-image--seminar {
+  background: #495057;
+}
+
+.ticket__booking__event-info {
+  padding: 16px;
+  flex: 1;
+}
+
+.ticket__booking__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.ticket__booking__form {
+  background: #ffffff;
+  border: 1px solid #e9f2f1;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.ticket__booking__input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+}
+
+.ticket__booking__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.ticket__booking__button--primary {
+  flex: 1;
+  background: #2ec4b6;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.ticket__booking__button--secondary {
+  border: 1px solid #1f2a44;
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.ticket__booking__loading {
+  text-align: center;
+  padding: 60px;
+}
