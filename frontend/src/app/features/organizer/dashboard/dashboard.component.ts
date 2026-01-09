@@ -18,7 +18,7 @@ interface Activity {
   id: number;
   type: 'booking' | 'event';
   message: string;
-  timestamp: string;
+  timestamp: string | undefined;
   relativeTime: string;
 }
 
@@ -45,7 +45,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private eventService: EventService,
     private bookingService: BookingService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadDashboardData();
@@ -59,21 +59,21 @@ export class DashboardComponent implements OnInit {
     this.eventService.getAllEvents().subscribe({
       next: (events) => {
         this.stats.totalEvents = events.length;
-        
+
         const now = new Date();
         this.upcomingEvents = events
           .filter(e => new Date(e.date_time) > now)
           .slice(0, 5);
-        
+
         this.stats.upcomingEvents = events.filter(e => new Date(e.date_time) > now).length;
 
         // Generate recent activities from events
         this.recentActivities = events.slice(0, 5).map((event, index) => ({
           id: event.id,
-          type: 'event',
+          type: 'event' as const,
           message: `Created event: ${event.name}`,
           timestamp: event.created_at,
-          relativeTime: this.getRelativeTime(event.created_at)
+          relativeTime: this.getRelativeTime(event.created_at || new Date().toISOString())
         }));
 
         this.loading = false;
@@ -99,26 +99,41 @@ export class DashboardComponent implements OnInit {
   }
 
   getRelativeTime(dateString: string): string {
-    return this.generateRecentActivities();
-  }
-
-  generateRecentActivities(): string {
+    const date = new Date(dateString);
     const now = new Date();
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
     const timeUnits = [
-      { unit: 'year', seconds: 31536000 },
-      { unit: 'month', seconds: 2592000 },
-      { unit: 'week', seconds: 604800 },
-      { unit: 'day', seconds: 86400 },
-      { unit: 'hour', seconds: 3600 },
-      { unit: 'minute', seconds: 60 }
+      { unit: 'year', secs: 31536000 },
+      { unit: 'month', secs: 2592000 },
+      { unit: 'week', secs: 604800 },
+      { unit: 'day', secs: 86400 },
+      { unit: 'hour', secs: 3600 },
+      { unit: 'minute', secs: 60 }
     ];
 
-    for (const { unit, seconds } of timeUnits) {
-      const interval = Math.floor(1 / seconds);
+    for (const { unit, secs } of timeUnits) {
+      const interval = Math.floor(seconds / secs);
       if (interval >= 1) {
         return interval === 1 ? `1 ${unit} ago` : `${interval} ${unit}s ago`;
       }
     }
     return 'just now';
+  }
+
+  getDefaultImage(categoryName: string | undefined): string {
+    const category = (categoryName || '').toLowerCase();
+    if (category.includes('tech') || category.includes('conference')) {
+      return 'assets/events/tech_conference.png';
+    } else if (category.includes('music') || category.includes('concert')) {
+      return 'assets/events/music_festival.png';
+    } else if (category.includes('sport') || category.includes('marathon')) {
+      return 'assets/events/sports_marathon.png';
+    } else if (category.includes('food') || category.includes('drink')) {
+      return 'assets/events/food_festival.png';
+    } else if (category.includes('art') || category.includes('culture')) {
+      return 'assets/events/art_exhibition.png';
+    }
+    return 'assets/events/tech_conference.png';
   }
 }

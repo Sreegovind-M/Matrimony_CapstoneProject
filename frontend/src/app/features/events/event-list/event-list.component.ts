@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
 import { Event } from '../../../core/models/event.model';
 import { NavbarComponent } from '../../../shared/navbar/navbar.component';
@@ -7,7 +8,7 @@ import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, NavbarComponent],
+  imports: [CommonModule, RouterModule, NavbarComponent],
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.css']
 })
@@ -17,7 +18,7 @@ export class EventListComponent implements OnInit {
   loading = true;
   error = false;
 
-  constructor(private eventService: EventService) {}
+  constructor(private eventService: EventService) { }
 
   ngOnInit(): void {
     this.fetchEvents();
@@ -39,16 +40,19 @@ export class EventListComponent implements OnInit {
     });
   }
 
-  getCategoryClass(category: string): string {
-    switch (category.toLowerCase()) {
-      case 'conference':
-        return 'event-card__media--conference';
-      case 'workshop':
-        return 'event-card__media--workshop';
-      case 'seminar':
-        return 'event-card__media--seminar';
-      default:
-        return 'event-card__media--default';
+  getDefaultImage(categoryName: string | undefined): string {
+    const category = (categoryName || '').toLowerCase();
+    if (category.includes('tech') || category.includes('conference')) {
+      return 'assets/events/tech_conference.png';
+    } else if (category.includes('music') || category.includes('concert')) {
+      return 'assets/events/music_festival.png';
+    } else if (category.includes('sport') || category.includes('marathon')) {
+      return 'assets/events/sports_marathon.png';
+    } else if (category.includes('food') || category.includes('drink')) {
+      return 'assets/events/food_festival.png';
+    } else if (category.includes('art') || category.includes('culture')) {
+      return 'assets/events/art_exhibition.png';
     }
+    return 'assets/events/tech_conference.png';
   }
 }

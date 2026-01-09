@@ -17,16 +17,22 @@
   <div *ngIf="!loading && !error" class="dashboard-content">
     <!-- HEADER -->
     <div class="dashboard-header">
-      <h1>Dashboard</h1>
-      <p>Welcome back! Here's your event management overview.</p>
+      <div class="header-text">
+        <h1>Dashboard</h1>
+        <p>Welcome back! Here's your event management overview.</p>
+      </div>
+      <a routerLink="/organizer/create-event" class="btn-create-event">
+        <span class="material-symbols-outlined">add</span>
+        Create New Event
+      </a>
     </div>
 
     <!-- STATS GRID -->
     <div class="stats-grid">
       <!-- TOTAL EVENTS -->
-      <div class="stat-card">
+      <div class="stat-card stat-card--primary">
         <div class="stat-icon">
-          <span class="material-symbols-outlined">bar_chart</span>
+          <span class="material-symbols-outlined">calendar_month</span>
         </div>
         <div class="stat-content">
           <div class="stat-value">{{ stats.totalEvents }}</div>
@@ -35,9 +41,9 @@
       </div>
 
       <!-- UPCOMING EVENTS -->
-      <div class="stat-card">
+      <div class="stat-card stat-card--success">
         <div class="stat-icon">
-          <span class="material-symbols-outlined">target</span>
+          <span class="material-symbols-outlined">upcoming</span>
         </div>
         <div class="stat-content">
           <div class="stat-value">{{ stats.upcomingEvents }}</div>
@@ -46,7 +52,7 @@
       </div>
 
       <!-- TOTAL BOOKINGS -->
-      <div class="stat-card">
+      <div class="stat-card stat-card--info">
         <div class="stat-icon">
           <span class="material-symbols-outlined">confirmation_number</span>
         </div>
@@ -57,9 +63,9 @@
       </div>
 
       <!-- TOTAL REVENUE -->
-      <div class="stat-card">
+      <div class="stat-card stat-card--warning">
         <div class="stat-icon">
-          <span class="material-symbols-outlined">currency_rupee</span>
+          <span class="material-symbols-outlined">payments</span>
         </div>
         <div class="stat-content">
           <div class="stat-value">₹{{ stats.totalRevenue | number }}</div>
@@ -68,66 +74,97 @@
       </div>
     </div>
 
-    <!-- UPCOMING EVENTS SECTION -->
-    <div class="section">
-      <div class="section-header">
-        <h2>Upcoming Events</h2>
-        <a routerLink="/organizer/my-events" class="view-all-link">View All</a>
-      </div>
-
-      <div *ngIf="upcomingEvents.length > 0; else noEvents" class="event-list">
-        <div *ngFor="let event of upcomingEvents" class="event-item">
-          <div class="event-header">
-            <h3>{{ event.name }}</h3>
-            <span class="event-category">{{ event.category }}</span>
-          </div>
-          <div class="event-details">
-            <div class="detail">
-              <span class="material-symbols-outlined">location_on</span>
-              {{ event.venue }}
-            </div>
-            <div class="detail">
-              <span class="material-symbols-outlined">schedule</span>
-              {{ event.date_time | date: 'MMM dd, yyyy - h:mm a' }}
-            </div>
-            <div class="detail">
-              <span class="material-symbols-outlined">group</span>
-              {{ event.capacity }} Capacity
-            </div>
-          </div>
+    <!-- TWO COLUMN LAYOUT -->
+    <div class="content-grid">
+      <!-- UPCOMING EVENTS SECTION -->
+      <div class="section-card">
+        <div class="section-header">
+          <h2>Upcoming Events</h2>
+          <a routerLink="/organizer/my-events" class="view-all-link">View All →</a>
         </div>
-      </div>
 
-      <ng-template #noEvents>
-        <div class="empty-state">
-          <span class="material-symbols-outlined">event</span>
-          <p>No upcoming events. Create one to get started!</p>
-        </div>
-      </ng-template>
-    </div>
-
-    <!-- RECENT ACTIVITY SECTION -->
-    <div class="section">
-      <div class="section-header">
-        <h2>Recent Activity</h2>
-      </div>
-
-      <div *ngIf="recentActivities.length > 0; else noActivity" class="activity-list">
-        <div *ngFor="let activity of recentActivities" class="activity-item">
-          <span class="material-symbols-outlined activity-icon">event_note</span>
-          <div class="activity-content">
-            <p class="activity-message">{{ activity.message }}</p>
-            <span class="activity-time">{{ activity.relativeTime }}</span>
+        <div *ngIf="upcomingEvents.length > 0; else noEvents" class="event-list">
+          <div *ngFor="let event of upcomingEvents" class="event-item" [routerLink]="['/events', event.id]">
+            <img [src]="event.image_url || getDefaultImage(event.category_name || event.category)" [alt]="event.name"
+              class="event-image" (error)="$any($event.target).src = 'assets/events/tech_conference.png'" />
+            <div class="event-info">
+              <h3>{{ event.name }}</h3>
+              <div class="event-meta">
+                <span class="meta-item">
+                  <span class="material-symbols-outlined">location_on</span>
+                  {{ event.venue }}
+                </span>
+                <span class="meta-item">
+                  <span class="material-symbols-outlined">schedule</span>
+                  {{ event.date_time | date: 'MMM dd, yyyy' }}
+                </span>
+              </div>
+              <span class="event-category">{{ event.category_name || event.category || 'Event' }}</span>
+            </div>
+            <div class="event-stats">
+              <div class="stat-mini">
+                <span class="value">{{ event.capacity }}</span>
+                <span class="label">Capacity</span>
+              </div>
+              <div class="stat-mini">
+                <span class="value">{{ event.tickets_booked || 0 }}</span>
+                <span class="label">Booked</span>
+              </div>
+            </div>
           </div>
         </div>
+
+        <ng-template #noEvents>
+          <div class="empty-state">
+            <span class="material-symbols-outlined">event</span>
+            <p>No upcoming events. Create one to get started!</p>
+            <a routerLink="/organizer/create-event" class="btn-create-small">Create Event</a>
+          </div>
+        </ng-template>
       </div>
 
-      <ng-template #noActivity>
-        <div class="empty-state">
-          <span class="material-symbols-outlined">history</span>
-          <p>No recent activity</p>
+      <!-- QUICK ACTIONS -->
+      <div class="section-card">
+        <div class="section-header">
+          <h2>Quick Actions</h2>
         </div>
-      </ng-template>
+
+        <div class="quick-actions">
+          <a routerLink="/organizer/create-event" class="quick-action">
+            <span class="material-symbols-outlined action-icon">add_circle</span>
+            <span class="action-text">Create Event</span>
+          </a>
+          <a routerLink="/organizer/my-events" class="quick-action">
+            <span class="material-symbols-outlined action-icon">list_alt</span>
+            <span class="action-text">Manage Events</span>
+          </a>
+          <div class="quick-action" (click)="loadDashboardData()">
+            <span class="material-symbols-outlined action-icon">refresh</span>
+            <span class="action-text">Refresh Data</span>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 2rem;">
+          <h2>Recent Activity</h2>
+        </div>
+
+        <div *ngIf="recentActivities.length > 0; else noActivity" class="activity-list">
+          <div *ngFor="let activity of recentActivities" class="activity-item">
+            <span class="material-symbols-outlined activity-icon">event_note</span>
+            <div class="activity-content">
+              <p class="activity-message">{{ activity.message }}</p>
+              <span class="activity-time">{{ activity.relativeTime }}</span>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noActivity>
+          <div class="empty-state-mini">
+            <span class="material-symbols-outlined">history</span>
+            <p>No recent activity</p>
+          </div>
+        </ng-template>
+      </div>
     </div>
   </div>
 </div>

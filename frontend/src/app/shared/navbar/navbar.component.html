@@ -10,15 +10,19 @@
 
   <!-- CENTER: LINKS (DESKTOP ONLY) -->
   <nav class="navbar__links" *ngIf="role === 'ORGANIZER'">
-    <a class="navbar__link" routerLink="/organizer/dashboard" routerLinkActive="navbar__link--active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
-    <a class="navbar__link" routerLink="/organizer/my-events" routerLinkActive="navbar__link--active" [routerLinkActiveOptions]="{ exact: true }">My Events</a>
-    <a class="navbar__link">Attendees</a>
+    <a class="navbar__link" routerLink="/organizer/dashboard" routerLinkActive="navbar__link--active"
+      [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+    <a class="navbar__link" routerLink="/organizer/my-events" routerLinkActive="navbar__link--active"
+      [routerLinkActiveOptions]="{ exact: true }">My Events</a>
+    <a class="navbar__link" routerLink="/organizer/create-event" routerLinkActive="navbar__link--active">Create
+      Event</a>
   </nav>
 
   <nav class="navbar__links" *ngIf="role === 'ATTENDEE'">
-    <a class="navbar__link navbar__link--active">Browse Events</a>
-    <a class="navbar__link">My Bookings</a>
-    <a class="navbar__link">Favorites</a>
+    <a class="navbar__link" routerLink="/events" routerLinkActive="navbar__link--active"
+      [routerLinkActiveOptions]="{ exact: true }">Browse Events</a>
+    <a class="navbar__link" routerLink="/my-bookings" routerLinkActive="navbar__link--active"
+      [routerLinkActiveOptions]="{ exact: true }">My Bookings</a>
   </nav>
 
   <!-- RIGHT: ACTIONS -->
@@ -32,15 +36,12 @@
       {{ role === "ORGANIZER" ? "Organizer" : "Attendee" }}
     </span>
 
-    <div
-      class="navbar__avatar"
-      [ngStyle]="{
+    <div class="navbar__avatar" [ngStyle]="{
         'background-image':
           role === 'ORGANIZER'
             ? 'url(assets/avatar-organizer.png)'
             : 'url(assets/avatar-attendee.png)'
-      }"
-    ></div>
+      }"></div>
 
     <button class="navbar__logout" (click)="logout()">
       <span class="material-symbols-outlined">logout</span>
@@ -58,19 +59,16 @@
 <!-- MOBILE MENU PANEL -->
 <div class="navbar__mobile-menu" *ngIf="isMobileMenuOpen">
   <ng-container *ngIf="role === 'ORGANIZER'">
-    <!-- Create Event (Organizer – Mobile only) -->
-    <a class="navbar__mobile-link navbar__mobile-link--primary" routerLink="/organizer/create-event" (click)="closeMobileMenu()">
+    <a class="navbar__mobile-link navbar__mobile-link--primary" routerLink="/organizer/create-event"
+      (click)="closeMobileMenu()">
       + Create Event
     </a>
-
     <a class="navbar__mobile-link" routerLink="/organizer/dashboard" (click)="closeMobileMenu()">Dashboard</a>
     <a class="navbar__mobile-link" routerLink="/organizer/my-events" (click)="closeMobileMenu()">My Events</a>
-    <a class="navbar__mobile-link" (click)="closeMobileMenu()">Attendees</a>
   </ng-container>
 
   <ng-container *ngIf="role === 'ATTENDEE'">
-    <a class="navbar__mobile-link" (click)="closeMobileMenu()">Browse Events</a>
-    <a class="navbar__mobile-link" (click)="closeMobileMenu()">My Bookings</a>
-    <a class="navbar__mobile-link" (click)="closeMobileMenu()">Favorites</a>
+    <a class="navbar__mobile-link" routerLink="/events" (click)="closeMobileMenu()">Browse Events</a>
+    <a class="navbar__mobile-link" routerLink="/my-bookings" (click)="closeMobileMenu()">My Bookings</a>
   </ng-container>
 </div>

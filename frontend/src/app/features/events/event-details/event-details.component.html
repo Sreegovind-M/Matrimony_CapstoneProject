@@ -1,6 +1,7 @@
 <app-navbar></app-navbar>
+
 <section class="event-details">
-  <!-- ================= LOADING STATE ================= -->
+  <!-- LOADING STATE -->
   <div *ngIf="loading" class="event-state event-state--loading">
     <div class="skeleton hero"></div>
     <div class="skeleton title"></div>
@@ -8,9 +9,9 @@
     <div class="skeleton text"></div>
   </div>
 
-  <!-- ================= ERROR STATE ================= -->
-  <div *ngIf="error" class="event-state event-state--error">
-    <div class="event-state__icon">!</div>
+  <!-- ERROR STATE -->
+  <div *ngIf="error && !loading" class="event-state event-state--error">
+    <div class="event-state__icon">⚠️</div>
     <h3>Failed to load event details</h3>
     <p>Please check your connection and try again.</p>
     <div class="event-state__actions">
@@ -19,19 +20,24 @@
     </div>
   </div>
 
-  <!-- ================= NOT FOUND STATE ================= -->
-  <div *ngIf="notFound" class="event-state event-state--empty">
-    <div class="event-state__icon">×</div>
+  <!-- NOT FOUND STATE -->
+  <div *ngIf="notFound && !loading" class="event-state event-state--empty">
+    <div class="event-state__icon">🔍</div>
     <h3>Event Not Found</h3>
     <p>This event does not exist or may have been removed.</p>
     <button class="btn btn--primary" (click)="goBack()">Back to Events</button>
   </div>
 
-  <!-- ================= SUCCESS STATE ================= -->
-  <div *ngIf="event" class="event-card">
-    <!-- Hero -->
-    <div class="event-hero" [ngClass]="getCategoryClass(event.category)">
-      <span class="event-hero__badge">{{ event.category }}</span>
+  <!-- SUCCESS STATE -->
+  <div *ngIf="event && !loading && !error && !notFound" class="event-card">
+    <!-- Hero Image -->
+    <div class="event-hero">
+      <img [src]="event.image_url || getDefaultImage(event.category_name)" [alt]="event.name" class="event-hero__image"
+        (error)="$any($event.target).src = 'assets/events/tech_conference.png'" />
+      <div class="event-hero__overlay">
+        <span class="event-hero__badge">{{ event.category_name || 'Event' }}</span>
+        <span *ngIf="event.is_featured" class="event-hero__featured">⭐ Featured</span>
+      </div>
     </div>
 
     <!-- Content -->
@@ -39,8 +45,26 @@
       <h1 class="event-title">{{ event.name }}</h1>
 
       <div class="event-meta">
-        <span>{{ event.date_time | date : "medium" }}</span>
-        <span>{{ event.venue }}</span>
+        <div class="event-meta__item">
+          <span class="icon">📅</span>
+          <span>{{ event.date_time | date : "EEEE, MMMM d, yyyy 'at' h:mm a" }}</span>
+        </div>
+        <div class="event-meta__item" *ngIf="event.end_date_time">
+          <span class="icon">🏁</span>
+          <span>Until {{ event.end_date_time | date : "MMM d, yyyy 'at' h:mm a" }}</span>
+        </div>
+        <div class="event-meta__item">
+          <span class="icon">📍</span>
+          <span>{{ event.venue }}</span>
+        </div>
+        <div class="event-meta__item" *ngIf="event.venue_address">
+          <span class="icon">🗺️</span>
+          <span>{{ event.venue_address }}</span>
+        </div>
+        <div class="event-meta__item" *ngIf="event.organizer_name">
+          <span class="icon">👤</span>
+          <span>Organized by {{ event.organizer_name }}</span>
+        </div>
       </div>
 
       <section class="event-section">
@@ -51,20 +75,33 @@
       <section class="event-info">
         <div class="event-info__item">
           <strong>Category</strong>
-          <span>{{ event.category }}</span>
+          <span>{{ event.category_name || 'General' }}</span>
         </div>
 
         <div class="event-info__item">
-          <strong>Capacity</strong>
+          <strong>Total Capacity</strong>
           <span>{{ event.capacity }} attendees</span>
+        </div>
+
+        <div class="event-info__item">
+          <strong>Available Seats</strong>
+          <span class="seats-available">{{ getAvailableSeats() }} left</span>
+        </div>
+
+        <div class="event-info__item">
+          <strong>Ticket Price</strong>
+          <span *ngIf="event.ticket_price && event.ticket_price > 0" class="price">${{ event.ticket_price }}</span>
+          <span *ngIf="!event.ticket_price || event.ticket_price === 0" class="price free">FREE</span>
         </div>
       </section>
 
       <div class="event-actions">
         <button class="btn btn--secondary" (click)="goBack()">
-          Back to Events
+          ← Back to Events
         </button>
-        <button class="btn btn--accent">Book Tickets</button>
+        <button class="btn btn--accent" (click)="bookTickets()" [disabled]="getAvailableSeats() === 0">
+          {{ getAvailableSeats() > 0 ? '🎟️ Book Tickets' : 'Sold Out' }}
+        </button>
       </div>
     </div>
   </div>

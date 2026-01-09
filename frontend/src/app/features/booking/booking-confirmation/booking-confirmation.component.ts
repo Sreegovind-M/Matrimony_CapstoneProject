@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookingService } from '../../../core/services/booking.service';
 import { Booking } from '../../../core/models/booking.model';
@@ -7,7 +8,7 @@ import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 @Component({
   selector: 'app-booking-confirmation',
   standalone: true,
-  imports: [NavbarComponent],
+  imports: [CommonModule, NavbarComponent],
   templateUrl: './booking-confirmation.component.html',
   styleUrls: ['./booking-confirmation.component.css']
 })
@@ -23,7 +24,7 @@ export class BookingConfirmationComponent implements OnInit {
     private route: ActivatedRoute,
     private bookingService: BookingService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.bookingId = Number(this.route.snapshot.paramMap.get('bookingId'));

@@ -5,8 +5,12 @@
   <div class="page-header">
     <div class="header-content">
       <h1 class="page-title">My Events</h1>
-      <p class="page-subtitle">Manage and organize all your matrimony events</p>
+      <p class="page-subtitle">Manage and organize all your events in one place</p>
     </div>
+    <a routerLink="/organizer/create-event" class="btn-create">
+      <span class="material-symbols-outlined">add</span>
+      Create New Event
+    </a>
   </div>
 
   <!-- Stats Bar -->
@@ -17,18 +21,13 @@
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
-      <span class="stat-number">{{ upcomingCount }}</span>
+      <span class="stat-number upcoming">{{ upcomingCount }}</span>
       <span class="stat-label">Upcoming</span>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
-      <span class="stat-number">{{ pastCount }}</span>
+      <span class="stat-number completed">{{ pastCount }}</span>
       <span class="stat-label">Completed</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-      <span class="stat-number">0</span>
-      <span class="stat-label">Drafts</span>
     </div>
   </div>
 
@@ -38,17 +37,13 @@
       <!-- Search Bar -->
       <div class="search-container">
         <span class="material-symbols-outlined search-icon">search</span>
-        <input
-          type="text"
-          class="search-input"
-          placeholder="Search events by name, venue, or category..."
-          [(ngModel)]="searchQuery"
-          (ngModelChange)="onSearchChange()"
-        />
+        <input type="text" class="search-input" placeholder="Search events by name, venue, or category..."
+          [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" />
       </div>
 
       <!-- View Mode Toggle -->
-      <button class="view-toggle" (click)="toggleViewMode()" [title]="viewMode === 'grid' ? 'Switch to List View' : 'Switch to Grid View'">
+      <button class="view-toggle" (click)="toggleViewMode()"
+        [title]="viewMode === 'grid' ? 'Switch to List View' : 'Switch to Grid View'">
         <span class="material-symbols-outlined" *ngIf="viewMode === 'grid'">view_list</span>
         <span class="material-symbols-outlined" *ngIf="viewMode === 'list'">view_module</span>
       </button>
@@ -57,33 +52,14 @@
     <div class="filters-actions-row">
       <!-- Filter Buttons -->
       <div class="filter-buttons">
-        <button
-          class="filter-btn"
-          [class.active]="activeFilter === 'all'"
-          (click)="setFilter('all')"
-        >
+        <button class="filter-btn" [class.active]="activeFilter === 'all'" (click)="setFilter('all')">
           All Events
         </button>
-        <button
-          class="filter-btn"
-          [class.active]="activeFilter === 'upcoming'"
-          (click)="setFilter('upcoming')"
-        >
+        <button class="filter-btn" [class.active]="activeFilter === 'upcoming'" (click)="setFilter('upcoming')">
           Upcoming
         </button>
-        <button
-          class="filter-btn"
-          [class.active]="activeFilter === 'past'"
-          (click)="setFilter('past')"
-        >
+        <button class="filter-btn" [class.active]="activeFilter === 'past'" (click)="setFilter('past')">
           Past
-        </button>
-        <button
-          class="filter-btn"
-          [class.active]="activeFilter === 'draft'"
-          (click)="setFilter('draft')"
-        >
-          Drafts
         </button>
       </div>
 
@@ -107,9 +83,7 @@
 
   <!-- Empty State -->
   <div *ngIf="!isLoading && filteredEvents.length === 0" class="empty-state">
-    <div class="empty-icon">
-      <span class="material-symbols-outlined">event</span>
-    </div>
+    <div class="empty-icon">📅</div>
     <h2 class="empty-title">No Events Found</h2>
     <p class="empty-description" *ngIf="searchQuery">
       No events match your search criteria. Try adjusting your filters.
@@ -118,8 +92,12 @@
       No {{ activeFilter }} events available.
     </p>
     <p class="empty-description" *ngIf="!searchQuery && activeFilter === 'all'">
-      You haven't created any events yet. Use the "Create Event" button in the navigation to get started!
+      You haven't created any events yet.
     </p>
+    <a routerLink="/organizer/create-event" class="btn-create-large">
+      <span class="material-symbols-outlined">add</span>
+      Create Your First Event
+    </a>
   </div>
 
   <!-- Events Grid View -->
@@ -130,9 +108,11 @@
         {{ getEventStatus(event) | uppercase }}
       </div>
 
-      <!-- Event Image Placeholder -->
-      <div class="event-image">
-        <div class="event-category-tag">{{ event.category }}</div>
+      <!-- Event Image - NOW WITH REAL IMAGES -->
+      <div class="event-image-container">
+        <img [src]="event.image_url || getDefaultImage(event.category_name || event.category)" [alt]="event.name"
+          class="event-image" (error)="$any($event.target).src = 'assets/events/tech_conference.png'" />
+        <div class="event-category-tag">{{ event.category_name || event.category || 'Event' }}</div>
         <div class="event-date-overlay">
           <span class="overlay-day">{{ formatDate(event.date_time).split(' ')[1] }}</span>
           <span class="overlay-month">{{ formatDate(event.date_time).split(' ')[0] }}</span>
@@ -142,7 +122,7 @@
       <!-- Event Details -->
       <div class="event-card-body">
         <h3 class="event-card-title">{{ event.name }}</h3>
-        
+
         <div class="event-info-grid">
           <div class="info-item">
             <span class="material-symbols-outlined info-icon">location_on</span>
@@ -156,13 +136,17 @@
             <span class="material-symbols-outlined info-icon">group</span>
             <span class="info-text">{{ event.capacity }} seats</span>
           </div>
-          <div class="info-item" *ngIf="getDaysUntilEvent(event.date_time) > 0">
-            <span class="material-symbols-outlined info-icon">schedule</span>
-            <span class="info-text">{{ getDaysUntilEvent(event.date_time) }} days left</span>
+          <div class="info-item">
+            <span class="material-symbols-outlined info-icon">confirmation_number</span>
+            <span class="info-text">{{ event.tickets_booked || 0 }} booked</span>
           </div>
         </div>
 
-        <p class="event-description">{{ event.description }}</p>
+        <div class="event-price-row">
+          <span class="price" *ngIf="event.ticket_price && event.ticket_price > 0">${{ event.ticket_price }}</span>
+          <span class="price free" *ngIf="!event.ticket_price || event.ticket_price === 0">FREE</span>
+          <span class="availability">{{ (event.capacity || 0) - (event.tickets_booked || 0) }} available</span>
+        </div>
 
         <!-- Action Buttons -->
         <div class="event-actions">
@@ -170,13 +154,13 @@
             <span class="material-symbols-outlined">visibility</span>
             View
           </button>
-          <button class="action-btn btn-edit" [routerLink]="['/organizer/edit-event', event.id]" title="Edit Event">
+          <button class="action-btn btn-edit" (click)="editEvent(event)" title="Edit Event">
             <span class="material-symbols-outlined">edit</span>
             Edit
           </button>
-          <button class="action-btn btn-duplicate" (click)="duplicateEvent(event)" title="Duplicate Event">
-            <span class="material-symbols-outlined">content_copy</span>
-            Copy
+          <button class="action-btn btn-attendees" (click)="viewAttendees(event)" title="View Attendees">
+            <span class="material-symbols-outlined">people</span>
+            Attendees
           </button>
           <button class="action-btn btn-delete" (click)="deleteEvent(event.id, event.name)" title="Delete Event">
             <span class="material-symbols-outlined">delete</span>
@@ -193,7 +177,7 @@
       <div class="list-col col-event">Event</div>
       <div class="list-col col-date">Date & Time</div>
       <div class="list-col col-venue">Venue</div>
-      <div class="list-col col-capacity">Capacity</div>
+      <div class="list-col col-capacity">Bookings</div>
       <div class="list-col col-status">Status</div>
       <div class="list-col col-actions">Actions</div>
     </div>
@@ -201,12 +185,11 @@
     <div *ngFor="let event of filteredEvents" class="list-row">
       <div class="list-col col-event">
         <div class="event-name-wrapper">
-          <div class="event-icon">
-            <span class="material-symbols-outlined">event</span>
-          </div>
+          <img [src]="event.image_url || getDefaultImage(event.category_name || event.category)" [alt]="event.name"
+            class="list-event-image" (error)="$any($event.target).src = 'assets/events/tech_conference.png'" />
           <div class="event-name-details">
             <h4 class="list-event-name">{{ event.name }}</h4>
-            <span class="list-category">{{ event.category }}</span>
+            <span class="list-category">{{ event.category_name || event.category || 'Event' }}</span>
           </div>
         </div>
       </div>
@@ -220,7 +203,12 @@
         <span class="venue-text">{{ event.venue }}</span>
       </div>
       <div class="list-col col-capacity">
-        <span class="capacity-badge">{{ event.capacity }}</span>
+        <div class="booking-progress">
+          <span class="booking-count">{{ event.tickets_booked || 0 }}/{{ event.capacity }}</span>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="((event.tickets_booked || 0) / event.capacity) * 100"></div>
+          </div>
+        </div>
       </div>
       <div class="list-col col-status">
         <span class="status-pill" [style.background-color]="getStatusColor(getEventStatus(event))">
@@ -232,11 +220,11 @@
           <button class="list-action-btn" [routerLink]="['/events', event.id]" title="View">
             <span class="material-symbols-outlined">visibility</span>
           </button>
-          <button class="list-action-btn" [routerLink]="['/organizer/edit-event', event.id]" title="Edit">
+          <button class="list-action-btn" (click)="editEvent(event)" title="Edit">
             <span class="material-symbols-outlined">edit</span>
           </button>
-          <button class="list-action-btn" (click)="duplicateEvent(event)" title="Duplicate">
-            <span class="material-symbols-outlined">content_copy</span>
+          <button class="list-action-btn" (click)="viewAttendees(event)" title="Attendees">
+            <span class="material-symbols-outlined">people</span>
           </button>
           <button class="list-action-btn danger" (click)="deleteEvent(event.id, event.name)" title="Delete">
             <span class="material-symbols-outlined">delete</span>

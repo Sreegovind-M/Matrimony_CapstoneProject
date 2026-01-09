@@ -5,4 +5,12 @@ export interface Booking {
   tickets_booked: number;
   total_price: number;
   booking_time: string;
+  status?: string;
+  confirmation_code?: string;
+  // Joined from events table
+  event_name?: string;
+  venue?: string;
+  date_time?: string;
+  image_url?: string;
+  event_description?: string;
 }

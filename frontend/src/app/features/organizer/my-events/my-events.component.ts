@@ -25,7 +25,7 @@ export class MyEventsComponent implements OnInit {
   sortBy: SortType = 'date';
   viewMode: 'grid' | 'list' = 'grid';
 
-  constructor(private eventService: EventService) {}
+  constructor(private eventService: EventService) { }
 
   ngOnInit(): void {
     this.loadEvents();
@@ -69,7 +69,7 @@ export class MyEventsComponent implements OnInit {
       filtered = filtered.filter(e =>
         e.name.toLowerCase().includes(query) ||
         e.venue.toLowerCase().includes(query) ||
-        e.category.toLowerCase().includes(query)
+        (e.category || e.category_name || '').toLowerCase().includes(query)
       );
     }
 
@@ -126,7 +126,7 @@ export class MyEventsComponent implements OnInit {
   getEventStatus(event: Event): string {
     const eventDate = new Date(event.date_time);
     const now = new Date();
-    
+
     if (eventDate > now) {
       return 'upcoming';
     } else if (eventDate.toDateString() === now.toDateString()) {
@@ -173,6 +173,34 @@ export class MyEventsComponent implements OnInit {
 
   get pastCount(): number {
     const now = new Date();
-    return this.allEvents.filter(e => new Date(e.date_time) <= now).length;
+    return this.allEvents.filter(e => new Date(e.date_time) > now).length
+  }
+
+  getDefaultImage(categoryName: string | undefined): string {
+    const category = (categoryName || '').toLowerCase();
+    if (category.includes('tech') || category.includes('conference')) {
+      return 'assets/events/tech_conference.png';
+    } else if (category.includes('music') || category.includes('concert')) {
+      return 'assets/events/music_festival.png';
+    } else if (category.includes('sport') || category.includes('marathon')) {
+      return 'assets/events/sports_marathon.png';
+    } else if (category.includes('food') || category.includes('drink')) {
+      return 'assets/events/food_festival.png';
+    } else if (category.includes('art') || category.includes('culture')) {
+      return 'assets/events/art_exhibition.png';
+    }
+    return 'assets/events/tech_conference.png';
+  }
+
+  editEvent(event: Event): void {
+    alert(`Edit Event functionality coming soon!\n\nEvent: ${event.name}\nID: ${event.id}`);
+    // TODO: Navigate to edit page or open modal
+  }
+
+  viewAttendees(event: Event): void {
+    const booked = event.tickets_booked || 0;
+    alert(`Attendees for ${event.name}\n\nTotal Bookings: ${booked}\nCapacity: ${event.capacity}\nAvailable: ${event.capacity - booked}`);
+    // TODO: Navigate to attendees list or open modal
   }
 }
+
