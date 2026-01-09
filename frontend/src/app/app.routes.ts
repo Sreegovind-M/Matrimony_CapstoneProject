@@ -4,6 +4,10 @@ import { OrganizerGuard } from './core/guards/organizer.guard';
 
 import { LoginComponent } from './features/auth/login/login.component';
 import { EventListComponent } from './features/events/event-list/event-list.component';
+import { EventDetailsComponent } from './features/events/event-details/event-details.component';
+import { TicketBookingComponent } from './features/events/ticket-booking/ticket-booking.component';
+import { BookingConfirmationComponent } from './features/booking/booking-confirmation/booking-confirmation.component';
+import { MyBookingsComponent } from './features/booking/my-bookings/my-bookings.component';
 import { DashboardComponent } from './features/organizer/dashboard/dashboard.component';
 import { MyEventsComponent } from './features/organizer/my-events/my-events.component';
 import { CreateEventComponent } from './features/organizer/create-event/create-event.component';
@@ -15,6 +19,30 @@ export const routes: Routes = [
   {
     path: 'events',
     component: EventListComponent,
+    canActivate: [AttendeeGuard]
+  },
+
+  {
+    path: 'events/:id',
+    component: EventDetailsComponent,
+    canActivate: [AttendeeGuard]
+  },
+
+  {
+    path: 'events/:id/book',
+    component: TicketBookingComponent,
+    canActivate: [AttendeeGuard]
+  },
+
+  {
+    path: 'booking-confirmation/:id',
+    component: BookingConfirmationComponent,
+    canActivate: [AttendeeGuard]
+  },
+
+  {
+    path: 'my-bookings',
+    component: MyBookingsComponent,
     canActivate: [AttendeeGuard]
   },
 
@@ -41,3 +69,4 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
 ];
+

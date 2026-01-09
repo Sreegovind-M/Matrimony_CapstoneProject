@@ -1,0 +1,76 @@
+<app-navbar></app-navbar>
+
+<div class="my-bookings">
+  <div class="my-bookings__header">
+    <h1 class="my-bookings__title">My Bookings</h1>
+    <p class="my-bookings__subtitle">View all your event tickets and reservations</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="my-bookings__loading">
+    <div class="spinner"></div>
+    <p>Loading your bookings...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="my-bookings__error">
+    <span class="error-icon">⚠️</span>
+    <p>{{ error }}</p>
+    <button (click)="loadBookings()" class="btn btn--primary">Try Again</button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && bookings.length === 0" class="my-bookings__empty">
+    <span class="empty-icon">🎫</span>
+    <h2>No bookings yet</h2>
+    <p>You haven't booked any events. Browse events to find something exciting!</p>
+    <a routerLink="/events" class="btn btn--primary">Browse Events</a>
+  </div>
+
+  <!-- Bookings List -->
+  <div *ngIf="!loading && !error && bookings.length > 0" class="bookings-grid">
+    <div *ngFor="let booking of bookings" class="booking-card">
+      <div class="booking-card__image">
+        <img [src]="booking.image_url || 'assets/events/tech_conference.png'" [alt]="booking.event_name" />
+        <span class="booking-card__status" [ngClass]="getStatusClass(booking.status)">
+          {{ booking.status }}
+        </span>
+      </div>
+      
+      <div class="booking-card__content">
+        <h3 class="booking-card__title">{{ booking.event_name }}</h3>
+        
+        <div class="booking-card__details">
+          <div class="detail-row">
+            <span class="detail-icon">📍</span>
+            <span class="detail-text">{{ booking.venue }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="detail-icon">📅</span>
+            <span class="detail-text">{{ formatDate(booking.date_time) }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="detail-icon">🎟️</span>
+            <span class="detail-text">{{ booking.tickets_booked }} Ticket(s)</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="detail-icon">💰</span>
+            <span class="detail-text total-price">${{ booking.total_price }}</span>
+          </div>
+        </div>
+
+        <div class="booking-card__footer">
+          <span class="confirmation-code">
+            <strong>Confirmation:</strong> {{ booking.confirmation_code || 'N/A' }}
+          </span>
+          <span class="booking-date">
+            Booked on {{ formatDate(booking.booking_time) }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

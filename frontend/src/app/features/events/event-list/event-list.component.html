@@ -10,10 +10,7 @@
 
   <!-- LOADING STATE -->
   <div *ngIf="loading" class="event-list__grid">
-    <div
-      class="event-card event-card--skeleton"
-      *ngFor="let i of [1, 2, 3, 4, 5, 6]"
-    ></div>
+    <div class="event-card event-card--skeleton" *ngFor="let i of [1, 2, 3, 4, 5, 6]"></div>
   </div>
 
   <!-- ERROR STATE -->
@@ -34,17 +31,14 @@
   </div>
 
   <!-- EMPTY STATE -->
-  <div
-    *ngIf="!loading && !error && events.length === 0"
-    class="event-list__state"
-  >
+  <div *ngIf="!loading && !error && events.length === 0" class="event-list__state">
     <div class="event-list__empty-card">
       <div class="event-list__empty-icon">📅</div>
 
       <h3 class="event-list__empty-title">No events available</h3>
 
       <p class="event-list__empty-text">
-        We couldn’t find any upcoming events at the moment. Please check back
+        We couldn't find any upcoming events at the moment. Please check back
         later.
       </p>
     </div>
@@ -52,15 +46,15 @@
 
   <!-- EVENTS GRID -->
   <div *ngIf="!loading && !error && events.length > 0" class="event-list__grid">
-    <article class="event-card" *ngFor="let event of events">
-      <!-- CATEGORY IMAGE -->
-      <div
-        class="event-card__media"
-        [ngClass]="getCategoryClass(event.category)"
-      >
+    <article class="event-card" *ngFor="let event of events" [routerLink]="['/events', event.id]">
+      <!-- EVENT IMAGE -->
+      <div class="event-card__media">
+        <img [src]="event.image_url || getDefaultImage(event.category_name)" [alt]="event.name"
+          class="event-card__image" (error)="$any($event.target).src = 'assets/events/tech_conference.png'" />
         <span class="event-card__badge">
-          {{ event.category | uppercase }}
+          {{ event.category_name || 'Event' }}
         </span>
+        <span *ngIf="event.is_featured" class="event-card__featured">⭐ Featured</span>
       </div>
 
       <!-- CONTENT -->
@@ -70,24 +64,27 @@
         </h3>
 
         <div class="event-card__meta">
-          <span>
-            {{ event.date_time | date : "MMM dd, yyyy • hh:mm a" }}
+          <span class="event-card__date">
+            📅 {{ event.date_time | date : "MMM dd, yyyy • hh:mm a" }}
           </span>
-          <span>
-            {{ event.venue }}
+          <span class="event-card__venue">
+            📍 {{ event.venue }}
           </span>
         </div>
 
         <p class="event-card__description">
-          {{ event.description }}
+          {{ event.description | slice:0:120 }}{{ event.description && event.description.length > 120 ? '...' : '' }}
         </p>
 
         <div class="event-card__footer">
-          <span class="event-card__capacity">
-            Capacity: {{ event.capacity }}
-          </span>
-
-          <button class="event-card__button">View Details</button>
+          <div class="event-card__price">
+            <span *ngIf="event.ticket_price && event.ticket_price > 0" class="price">${{ event.ticket_price }}</span>
+            <span *ngIf="!event.ticket_price || event.ticket_price === 0" class="price free">FREE</span>
+          </div>
+          <div class="event-card__availability">
+            <span class="seats">{{ (event.capacity || 0) - (event.tickets_booked || 0) }} seats left</span>
+          </div>
+          <button class="event-card__button">View Details →</button>
         </div>
       </div>
     </article>

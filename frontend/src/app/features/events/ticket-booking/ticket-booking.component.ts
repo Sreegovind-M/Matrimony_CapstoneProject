@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../../../core/services/event.service';
 import { BookingService } from '../../../core/services/booking.service';
@@ -7,7 +9,8 @@ import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-ticket-booking',
-  imports: [NavbarComponent],
+  standalone: true,
+  imports: [CommonModule, FormsModule, NavbarComponent],
   templateUrl: './ticket-booking.component.html',
   styleUrls: ['./ticket-booking.component.css'],
 })
@@ -24,7 +27,7 @@ export class TicketBookingComponent implements OnInit {
     private eventService: EventService,
     private bookingService: BookingService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const eventId = Number(this.route.snapshot.paramMap.get('id'));
@@ -63,7 +66,7 @@ export class TicketBookingComponent implements OnInit {
       .subscribe({
         next: (booking) => {
           // Navigate to booking confirmation page
-          this.router.navigate(['/booking', booking.id]);
+          this.router.navigate(['/booking-confirmation', booking.id]);
         },
         error: (err) => {
           this.errorMessage =
