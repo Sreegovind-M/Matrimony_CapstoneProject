@@ -1,105 +1,77 @@
-<section class="login">
-  <div class="login__container">
-    <div class="login__card">
-      <!-- App Icon -->
-      <div class="login__app-icon">
-        <span class="material-symbols-outlined">event</span>
-      </div>
+<!-- NAVBAR -->
+<header class="login-navbar">
+  <div class="login-navbar__brand">
+    <span class="material-symbols-outlined login-navbar__icon">
+      calendar_month
+    </span>
+    <span class="login-navbar__text">Smart Event Planner</span>
+  </div>
 
-      <!-- Title -->
-      <h1 class="login__title">Smart Event Planner</h1>
-      <p class="login__subtitle">Welcome back! Please sign in to continue.</p>
+  <button class="login-navbar__help">
+    <span class="material-symbols-outlined">help_outline</span>
+  </button>
+</header>
 
-      <!-- Role Selection -->
-      <div class="login__role-section">
-        <p class="login__role-heading">SELECT YOUR ROLE</p>
+<!-- PAGE -->
+<main class="login-page">
+  <section class="login-card">
+    <div class="login-card__header">
+      <h1>Welcome Back</h1>
+      <p>Please enter your details to manage your events.</p>
+    </div>
 
-        <div class="login__role-options">
-          <button
-            type="button"
-            class="login__role-button"
-            [class.login__role-button--active]="role === 'ATTENDEE'"
-            (click)="role = 'ATTENDEE'"
-          >
-            <span class="material-symbols-outlined">confirmation_number</span>
-            Attendee
-          </button>
-
-          <button
-            type="button"
-            class="login__role-button"
-            [class.login__role-button--active]="role === 'ORGANIZER'"
-            (click)="role = 'ORGANIZER'"
-          >
-            <span class="material-symbols-outlined">domain</span>
-            Organizer
-          </button>
-
-          <button
-            type="button"
-            class="login__role-button"
-            [class.login__role-button--active]="role === 'ADMIN'"
-            (click)="role = 'ADMIN'"
-          >
-            <span class="material-symbols-outlined">shield_person</span>
-            Admin
-          </button>
-        </div>
-      </div>
-
-      <!-- Form -->
-      <form class="login__form" (ngSubmit)="onLogin()">
-        <label class="login__label">Email Address</label>
-        <div class="login__input-group">
+    <!-- FORM -->
+    <form class="login-form" (ngSubmit)="login()">
+      <!-- EMAIL -->
+      <div class="login-form__group">
+        <label>Email Address</label>
+        <div class="login-form__input-wrapper">
           <span class="material-symbols-outlined">mail</span>
-          <input
-            type="email"
-            class="login__input"
-            placeholder="name@example.com"
-            [(ngModel)]="email"
-            name="email"
-            required
-          />
+          <input type="email" placeholder="john@example.com" />
+        </div>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="login-form__group">
+        <div class="login-form__label-row">
+          <label>Password</label>
+          <a href="#" class="login-form__forgot">Forgot Password?</a>
         </div>
 
-        <label class="login__label">Password</label>
-        <div class="login__input-group">
+        <div class="login-form__input-wrapper">
           <span class="material-symbols-outlined">lock</span>
           <input
-            [type]="isPasswordVisible ? 'text' : 'password'"
-            class="login__input"
-            placeholder="Enter your password"
-            [(ngModel)]="password"
-            name="password"
-            required
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="••••••••"
           />
           <button
             type="button"
-            class="login__visibility-toggle"
-            (click)="togglePasswordVisibility()"
+            class="login-form__toggle"
+            (click)="togglePassword()"
           >
             <span class="material-symbols-outlined">
-              {{ isPasswordVisible ? "visibility_off" : "visibility" }}
+              {{ showPassword ? "visibility_off" : "visibility" }}
             </span>
           </button>
         </div>
-
-        <div class="login__forgot">
-          <a href="#">Forgot Password?</a>
-        </div>
-
-        <button type="submit" class="login__submit">Sign In →</button>
-      </form>
-
-      <!-- Footer -->
-      <div class="login__footer">
-        Don’t have an account?
-        <a href="#">Create an account</a>
       </div>
-    </div>
 
-    <p class="login__copyright">
-      © 2025 Smart Event Planner. All rights reserved.
-    </p>
-  </div>
-</section>
+      <!-- ERROR (hidden by default) -->
+      <div class="login-form__error">
+        <span class="material-symbols-outlined">error</span>
+        Invalid email or password
+      </div>
+
+      <!-- SUBMIT -->
+      <button type="submit" class="login-form__submit">Login to Account</button>
+    </form>
+
+    <!-- FOOTER -->
+    <div class="login-footer">
+      <p>
+        Don't have an account?
+        <span class="login-footer__link" (click)="goToSignup()">Sign Up</span>
+      </p>
+    </div>
+  </section>
+</main>
