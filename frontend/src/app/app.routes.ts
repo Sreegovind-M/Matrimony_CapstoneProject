@@ -13,9 +13,11 @@ import { MyEventsComponent } from './features/organizer/my-events/my-events.comp
 import { CreateEventComponent } from './features/organizer/create-event/create-event.component';
 import { UnauthorizedComponent } from './shared/unauthorized/unauthorized.component';
 import { LandingComponent } from './features/landing/landing.component';
+import { SignupComponent } from './features/auth/signup/signup.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
   { path: '', component: LandingComponent },
 
   {

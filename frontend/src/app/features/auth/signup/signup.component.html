@@ -1,0 +1,87 @@
+<!-- NAVBAR -->
+<header class="signup-navbar">
+  <div class="signup-navbar__brand">
+    <span class="material-symbols-outlined signup-navbar__brand-icon">
+      calendar_month
+    </span>
+    <span class="signup-navbar__brand-text">Smart Event Planner</span>
+    <span class="signup-navbar__brand-text--mobile">SEP</span>
+  </div>
+
+  <button class="signup-navbar__help">Help Center</button>
+</header>
+
+<main class="signup-page">
+  <section class="signup-card">
+    <h1 class="signup-card__title">Create Your Account</h1>
+    <p class="signup-card__subtitle">
+      Join our community of event enthusiasts and organizers.
+    </p>
+
+    <!-- ROLE SELECTION -->
+    <div class="signup-role">
+      <p class="signup-role__label">Register as</p>
+      <div class="signup-role__options">
+        <button
+          type="button"
+          class="signup-role__option"
+          [class.signup-role__option--active]="selectedRole === 'ATTENDEE'"
+          (click)="selectRole('ATTENDEE')"
+        >
+          Attendee
+        </button>
+
+        <button
+          type="button"
+          class="signup-role__option"
+          [class.signup-role__option--active]="selectedRole === 'ORGANIZER'"
+          (click)="selectRole('ORGANIZER')"
+        >
+          Organizer
+        </button>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form class="signup-form" (ngSubmit)="submitForm()">
+      <div class="signup-form__group">
+        <label>Full Name</label>
+        <input type="text" placeholder="John Doe" />
+      </div>
+
+      <div class="signup-form__group">
+        <label>Email Address</label>
+        <input type="email" placeholder="john@example.com" />
+      </div>
+
+      <div class="signup-form__group">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="9876543210" />
+      </div>
+
+      <div class="signup-form__group signup-form__group--password">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••" />
+        <span class="material-symbols-outlined signup-form__lock"> lock </span>
+      </div>
+
+      <p class="signup-form__policy">
+        By creating an account, you agree to our
+        <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+      </p>
+
+      <button type="submit" class="signup-form__submit">
+        Create Account
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+    </form>
+
+    <!-- FOOTER LINK -->
+    <div class="signup-footer">
+      <p>
+        Already have an account?
+        <span class="signup-footer__login" (click)="goToLogin()"> Login </span>
+      </p>
+    </div>
+  </section>
+</main>
