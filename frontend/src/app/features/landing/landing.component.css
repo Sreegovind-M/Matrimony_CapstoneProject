@@ -1,0 +1,406 @@
+/* ===============================
+   NAVBAR
+================================ */
+.landing-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.landing-navbar__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2a44;
+}
+
+.landing-navbar__login {
+  background: #2ec4b6;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  height: 40px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.landing-navbar__login:hover {
+  background: #26b3a6;
+  transform: translateY(-1px);
+}
+
+/* ===============================
+   NAVBAR BRAND
+================================ */
+.landing-navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.navbar__brand-icon {
+  font-size: 26px;
+  color: #2ec4b6;
+}
+
+.navbar__brand-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2a44;
+}
+
+/* Mobile short name */
+.navbar__brand-text--mobile {
+  display: none;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1f2a44;
+}
+
+/* Responsive switch */
+@media (max-width: 640px) {
+  .navbar__brand-text {
+    display: none;
+  }
+
+  .navbar__brand-text--mobile {
+    display: inline;
+  }
+}
+
+/* ===============================
+   CONTAINER
+================================ */
+.landing-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 32px;
+}
+
+/* ===============================
+   HERO
+================================ */
+.landing-hero {
+  background: #1f2a44;
+  color: white;
+  padding: 60px;
+  border-radius: 16px;
+  margin-bottom: 64px;
+}
+
+.landing-hero h2 {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.landing-hero p {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 24px;
+}
+
+.landing-primary-btn {
+  background: #2ec4b6;
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.landing-primary-btn:hover {
+  background: #26b3a6;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(46, 196, 182, 0.35);
+}
+
+/* ===============================
+   SECTION TITLES
+================================ */
+.landing-section-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #1f2a44;
+}
+
+/* ===============================
+   TRENDING EVENTS
+================================ */
+.landing-card-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.landing-event-card {
+  background: white;
+  border-radius: 12px;
+  width: 300px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.landing-event-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+}
+
+.landing-event-card__image {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+}
+
+.landing-event-card__body {
+  padding: 16px;
+}
+
+.landing-event-card__body h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 6px 0;
+  color: #1f2a44;
+}
+
+.landing-event-card__body p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.landing-event-tag {
+  display: inline-block;
+  background: #2ec4b6;
+  color: white;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+/* ===============================
+   CATEGORY SECTION
+================================ */
+.landing-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.landing-category-card {
+  background: white;
+  padding: 24px;
+  text-align: center;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.landing-category-card span {
+  font-size: 36px;
+  color: #2ec4b6;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.landing-category-card h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #1f2a44;
+}
+
+.landing-category-card p {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.landing-category-card:hover {
+  background: #2ec4b6;
+  transform: translateY(-4px);
+}
+
+.landing-category-card:hover span,
+.landing-category-card:hover h4,
+.landing-category-card:hover p {
+  color: white;
+}
+
+/* ===============================
+   UPCOMING EVENTS
+================================ */
+.landing-upcoming-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.landing-upcoming-card {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.landing-upcoming-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.landing-upcoming-image {
+  height: 120px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.landing-upcoming-card h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2a44;
+  margin-bottom: 4px;
+}
+
+.landing-upcoming-card p {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.landing-link-btn {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: #2ec4b6;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease, text-decoration 0.2s ease;
+}
+
+.landing-link-btn:hover {
+  transform: translateX(2px);
+  text-decoration: underline;
+}
+
+/* ===============================
+   FEATURES
+================================ */
+.landing-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px;
+  margin: 72px 0;
+}
+
+.landing-feature {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.landing-feature span {
+  font-size: 28px;
+  color: #2ec4b6;
+  transition: transform 0.2s ease;
+}
+
+.landing-feature h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2a44;
+  margin-bottom: 4px;
+}
+
+.landing-feature p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ===============================
+   CTA
+================================ */
+.landing-cta {
+  background: #2ec4b6;
+  color: white;
+  padding: 64px;
+  border-radius: 20px;
+  text-align: center;
+  margin: 80px 0;
+}
+
+.landing-cta h2 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.landing-cta p {
+  font-size: 16px;
+  opacity: 0.95;
+  margin-bottom: 28px;
+}
+
+.landing-cta-btn {
+  background: white;
+  color: #2ec4b6;
+  padding: 14px 32px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.landing-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
+}
+
+/* ===============================
+   STATS
+================================ */
+.landing-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+  margin: 80px 0;
+}
+
+.landing-stat h3 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1f2a44;
+}
+
+.landing-stat p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+@media (max-width: 500px) {
+  .landing-stats{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+}

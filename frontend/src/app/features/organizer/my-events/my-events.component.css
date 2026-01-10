@@ -33,7 +33,7 @@
   margin: 0;
 }
 
-.btn-create {
+/* .btn-create {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -51,7 +51,7 @@
 .btn-create:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
+} */
 
 /* Stats Bar */
 .stats-bar {

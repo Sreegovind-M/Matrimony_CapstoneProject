@@ -12,61 +12,62 @@ import { DashboardComponent } from './features/organizer/dashboard/dashboard.com
 import { MyEventsComponent } from './features/organizer/my-events/my-events.component';
 import { CreateEventComponent } from './features/organizer/create-event/create-event.component';
 import { UnauthorizedComponent } from './shared/unauthorized/unauthorized.component';
+import { LandingComponent } from './features/landing/landing.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: '', component: LandingComponent },
 
   {
     path: 'events',
     component: EventListComponent,
-    canActivate: [AttendeeGuard]
+    canActivate: [AttendeeGuard],
   },
 
   {
     path: 'events/:id',
     component: EventDetailsComponent,
-    canActivate: [AttendeeGuard]
+    canActivate: [AttendeeGuard],
   },
 
   {
     path: 'events/:id/book',
     component: TicketBookingComponent,
-    canActivate: [AttendeeGuard]
+    canActivate: [AttendeeGuard],
   },
 
   {
     path: 'booking-confirmation/:id',
     component: BookingConfirmationComponent,
-    canActivate: [AttendeeGuard]
+    canActivate: [AttendeeGuard],
   },
 
   {
     path: 'my-bookings',
     component: MyBookingsComponent,
-    canActivate: [AttendeeGuard]
+    canActivate: [AttendeeGuard],
   },
 
   {
     path: 'organizer/dashboard',
     component: DashboardComponent,
-    canActivate: [OrganizerGuard]
+    canActivate: [OrganizerGuard],
   },
 
   {
     path: 'organizer/my-events',
     component: MyEventsComponent,
-    canActivate: [OrganizerGuard]
+    canActivate: [OrganizerGuard],
   },
 
   {
     path: 'organizer/create-event',
     component: CreateEventComponent,
-    canActivate: [OrganizerGuard]
+    canActivate: [OrganizerGuard],
   },
 
   { path: 'unauthorized', component: UnauthorizedComponent },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: 'login' },
 ];
-

@@ -1,0 +1,96 @@
+<!-- NAVBAR -->
+<header class="landing-navbar">
+  <div class="landing-navbar__brand">
+    <span class="material-symbols-outlined navbar__brand-icon">
+      calendar_month
+    </span>
+
+    <span class="navbar__brand-text"> Smart Event Planner </span>
+
+    <span class="navbar__brand-text--mobile"> SEP </span>
+  </div>
+
+  <button class="landing-navbar__login" (click)="goToLogin()">Login</button>
+</header>
+
+<main class="landing-container">
+  <!-- HERO -->
+  <section class="landing-hero">
+    <h2>Future-Proof Your Development Workflow</h2>
+    <p>Join world-class professionals at leading tech events.</p>
+    <button class="landing-primary-btn">View Events</button>
+  </section>
+
+  <!-- TRENDING EVENTS -->
+  <section>
+    <h3 class="landing-section-title">Trending Events</h3>
+    <div class="landing-card-row">
+      <div class="landing-event-card" *ngFor="let event of trendingEvents">
+        <div
+          class="landing-event-card__image"
+          [style.backgroundImage]="'url(' + event.image + ')'"
+        ></div>
+        <div class="landing-event-card__body">
+          <span class="landing-event-tag">{{ event.category }}</span>
+          <h4>{{ event.title }}</h4>
+          <p class="muted">{{ event.location }}</p>
+          <p>{{ event.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section>
+    <h3 class="landing-section-title">Events by Category</h3>
+    <div class="landing-category-grid">
+      <div class="landing-category-card" *ngFor="let cat of categories">
+        <span class="material-symbols-outlined">{{ cat.icon }}</span>
+        <h4>{{ cat.name }}</h4>
+        <p>{{ cat.subtitle }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPCOMING EVENTS -->
+  <section>
+    <h3 class="landing-section-title">Upcoming Events</h3>
+    <div class="landing-upcoming-grid">
+      <div class="landing-upcoming-card" *ngFor="let event of upcomingEvents">
+        <div
+          class="landing-upcoming-image"
+          [style.backgroundImage]="'url(' + event.image + ')'"
+        ></div>
+        <h4>{{ event.title }}</h4>
+        <p class="muted">{{ event.venue }}</p>
+        <button class="landing-link-btn">Book Now →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="landing-features">
+    <div class="landing-feature" *ngFor="let f of features">
+      <span class="material-symbols-outlined">{{ f.icon }}</span>
+      <div>
+        <h4>{{ f.title }}</h4>
+        <p>{{ f.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOST CTA -->
+  <section class="landing-cta">
+    <h2>Host Your Own Professional Event</h2>
+    <p>Join 5,000+ organizers using SmartPlanner.</p>
+    <button class="landing-cta-btn">Get Started for Free</button>
+  </section>
+
+  <!-- STATS -->
+  <section class="landing-stats">
+    <div class="landing-stat" *ngFor="let stat of stats">
+      <h3>{{ stat.value }}</h3>
+      <p>{{ stat.label }}</p>
+    </div>
+  </section>
+</main>
