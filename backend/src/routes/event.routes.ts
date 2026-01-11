@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import pool from '../config/db.config';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
+import { generateEventQRCode } from '../utils/qr.utils';
 
 const router = express.Router();
 
@@ -86,6 +87,27 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+// GET public event by ID (no auth required - for QR code scans)
+router.get('/public/:id', async (req: Request, res: Response) => {
+  try {
+    const [rows] = await pool.query<RowDataPacket[]>(`
+      SELECT e.*, c.name as category_name, u.name as organizer_name
+      FROM events e
+      LEFT JOIN categories c ON e.category_id = c.id
+      LEFT JOIN users u ON e.organizer_id = u.id
+      WHERE e.id = ? AND e.status = 'PUBLISHED'
+    `, [req.params.id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Event not found or not published' });
+    }
+    res.json(rows[0]);
+  } catch (error) {
+    console.error('Error fetching public event:', error);
+    res.status(500).json({ message: 'Error fetching event' });
+  }
+});
+
 // GET single event by ID
 router.get('/:id', async (req: Request, res: Response) => {
   try {
@@ -120,6 +142,7 @@ router.post('/', async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
+    // Insert event first
     const [result] = await pool.query<ResultSetHeader>(`
       INSERT INTO events (
         organizer_id, name, description, venue, venue_address,
@@ -132,8 +155,22 @@ router.post('/', async (req: Request, res: Response) => {
       ticket_price || 0, image_url, status, is_private ? 1 : 0
     ]);
 
+    const eventId = result.insertId;
+
+    // Generate QR code for the event
+    let qrCodeUrl = '';
+    try {
+      qrCodeUrl = await generateEventQRCode(eventId);
+      // Update event with QR code
+      await pool.query(`UPDATE events SET qr_code_url = ? WHERE id = ?`, [qrCodeUrl, eventId]);
+    } catch (qrError) {
+      console.error('Error generating QR code:', qrError);
+      // Continue without QR code if generation fails
+    }
+
     res.status(201).json({
-      id: result.insertId,
+      id: eventId,
+      qr_code_url: qrCodeUrl,
       message: 'Event created successfully'
     });
   } catch (error) {

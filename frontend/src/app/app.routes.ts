@@ -17,11 +17,15 @@ import { WelcomeComponent } from './features/organizer/welcome/welcome.component
 import { UnauthorizedComponent } from './shared/unauthorized/unauthorized.component';
 import { LandingComponent } from './features/landing/landing.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
+import { PublicEventComponent } from './features/public/public-event/public-event.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: '', component: LandingComponent },
+
+  // Public event page (no auth required - for QR code scans)
+  { path: 'event/:id', component: PublicEventComponent },
 
   {
     path: 'events',

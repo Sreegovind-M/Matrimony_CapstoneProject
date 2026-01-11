@@ -81,6 +81,98 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
+// POST guest booking (no authentication required - for QR code scans)
+router.post('/guest', async (req: Request, res: Response) => {
+  const connection = await pool.getConnection();
+
+  try {
+    const { eventId, name, email, phone, tickets } = req.body;
+    const ticketCount = tickets || 1;
+
+    if (!eventId || !name || !email) {
+      return res.status(400).json({ message: 'Event ID, name, and email are required' });
+    }
+
+    await connection.beginTransaction();
+
+    // Get event details
+    const [events] = await connection.query<RowDataPacket[]>(
+      'SELECT * FROM events WHERE id = ? AND status = "PUBLISHED" FOR UPDATE',
+      [eventId]
+    );
+
+    if (events.length === 0) {
+      await connection.rollback();
+      return res.status(404).json({ message: 'Event not found or not available' });
+    }
+
+    const event = events[0];
+    const availableSeats = event.capacity - (event.tickets_booked || 0);
+
+    if (ticketCount > availableSeats) {
+      await connection.rollback();
+      return res.status(400).json({
+        message: `Not enough seats available. Only ${availableSeats} seats left.`
+      });
+    }
+
+    // Check if guest user already exists by email
+    let attendeeId: number;
+    const [existingUsers] = await connection.query<RowDataPacket[]>(
+      'SELECT id FROM users WHERE email = ?',
+      [email]
+    );
+
+    if (existingUsers.length > 0) {
+      attendeeId = existingUsers[0].id;
+    } else {
+      // Create new guest user
+      const [userResult] = await connection.query<ResultSetHeader>(`
+        INSERT INTO users (name, email, phone, role, password_hash, is_active)
+        VALUES (?, ?, ?, 'ATTENDEE', 'guest_user', TRUE)
+      `, [name, email, phone || null]);
+      attendeeId = userResult.insertId;
+    }
+
+    const totalPrice = event.ticket_price * ticketCount;
+    const confirmationCode = generateConfirmationCode();
+
+    // Create booking
+    const [result] = await connection.query<ResultSetHeader>(`
+      INSERT INTO bookings (
+        event_id, attendee_id, tickets_booked, total_price, 
+        status, confirmation_code
+      ) VALUES (?, ?, ?, ?, 'CONFIRMED', ?)
+    `, [eventId, attendeeId, ticketCount, totalPrice, confirmationCode]);
+
+    // Update event tickets_booked
+    await connection.query(
+      'UPDATE events SET tickets_booked = COALESCE(tickets_booked, 0) + ? WHERE id = ?',
+      [ticketCount, eventId]
+    );
+
+    await connection.commit();
+
+    res.status(201).json({
+      id: result.insertId,
+      eventId,
+      attendeeName: name,
+      attendeeEmail: email,
+      tickets: ticketCount,
+      totalPrice,
+      confirmationCode,
+      status: 'CONFIRMED',
+      message: 'Booking successful! Check your email for confirmation.'
+    });
+  } catch (error) {
+    await connection.rollback();
+    console.error('Error creating guest booking:', error);
+    res.status(500).json({ message: 'Error creating booking' });
+  } finally {
+    connection.release();
+  }
+});
+
 // GET all bookings (for attendee)
 router.get('/', async (req: Request, res: Response) => {
   try {
