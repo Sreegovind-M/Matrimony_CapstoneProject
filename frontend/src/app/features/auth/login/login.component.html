@@ -27,7 +27,7 @@
         <label>Email Address</label>
         <div class="login-form__input-wrapper">
           <span class="material-symbols-outlined">mail</span>
-          <input type="email" placeholder="john@example.com" />
+          <input type="email" placeholder="john@example.com" [(ngModel)]="email" name="email" required />
         </div>
       </div>
 
@@ -40,15 +40,9 @@
 
         <div class="login-form__input-wrapper">
           <span class="material-symbols-outlined">lock</span>
-          <input
-            [type]="showPassword ? 'text' : 'password'"
-            placeholder="••••••••"
-          />
-          <button
-            type="button"
-            class="login-form__toggle"
-            (click)="togglePassword()"
-          >
+          <input [type]="showPassword ? 'text' : 'password'" placeholder="••••••••" [(ngModel)]="password"
+            name="password" required />
+          <button type="button" class="login-form__toggle" (click)="togglePassword()">
             <span class="material-symbols-outlined">
               {{ showPassword ? "visibility_off" : "visibility" }}
             </span>
@@ -56,14 +50,16 @@
         </div>
       </div>
 
-      <!-- ERROR (hidden by default) -->
-      <div class="login-form__error">
+      <!-- ERROR -->
+      <div class="login-form__error" *ngIf="errorMessage">
         <span class="material-symbols-outlined">error</span>
-        Invalid email or password
+        {{ errorMessage }}
       </div>
 
       <!-- SUBMIT -->
-      <button type="submit" class="login-form__submit">Login to Account</button>
+      <button type="submit" class="login-form__submit" [disabled]="isLoading">
+        {{ isLoading ? 'Logging in...' : 'Login to Account' }}
+      </button>
     </form>
 
     <!-- FOOTER -->

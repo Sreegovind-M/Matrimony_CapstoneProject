@@ -1,1 +1,201 @@
 <app-navbar></app-navbar>
+
+<div class="attendee-list-container">
+    <!-- Header -->
+    <div class="page-header">
+        <button class="back-btn" (click)="goBack()">
+            <span class="material-symbols-outlined">arrow_back</span>
+            Back to My Events
+        </button>
+
+        <div class="header-content">
+            <h1>
+                <span class="material-symbols-outlined">group</span>
+                Attendee List
+            </h1>
+            <p class="event-name" *ngIf="event">{{ event.name }}</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid" *ngIf="event">
+        <div class="stat-card">
+            <div class="stat-icon tickets">
+                <span class="material-symbols-outlined">confirmation_number</span>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ totalTickets }}</span>
+                <span class="stat-label">Tickets Sold</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon capacity">
+                <span class="material-symbols-outlined">event_seat</span>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ event.capacity - (event.tickets_booked || 0) }}</span>
+                <span class="stat-label">Spots Available</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon revenue">
+                <span class="material-symbols-outlined">payments</span>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">${{ totalRevenue.toFixed(2) }}</span>
+                <span class="stat-label">Total Revenue</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon attendees">
+                <span class="material-symbols-outlined">groups</span>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ confirmedCount }}</span>
+                <span class="stat-label">Confirmed Bookings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Actions -->
+    <div class="filters-bar">
+        <div class="search-box">
+            <span class="material-symbols-outlined">search</span>
+            <input type="text" placeholder="Search by name, email, or code..." (input)="onSearch($event)">
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn" [class.active]="statusFilter === 'ALL'" (click)="onStatusFilter('ALL')">
+                All ({{ bookings.length }})
+            </button>
+            <button class="filter-btn" [class.active]="statusFilter === 'CONFIRMED'"
+                (click)="onStatusFilter('CONFIRMED')">
+                Confirmed ({{ confirmedCount }})
+            </button>
+            <button class="filter-btn" [class.active]="statusFilter === 'CANCELLED'"
+                (click)="onStatusFilter('CANCELLED')">
+                Cancelled ({{ cancelledCount }})
+            </button>
+        </div>
+
+        <button class="export-btn" (click)="exportToCSV()" *ngIf="bookings.length > 0">
+            <span class="material-symbols-outlined">download</span>
+            Export CSV
+        </button>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Loading attendees...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="alert alert-error" *ngIf="errorMessage">
+        <span class="material-symbols-outlined">error</span>
+        {{ errorMessage }}
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && bookings.length === 0">
+        <div class="empty-icon">
+            <span class="material-symbols-outlined">group_off</span>
+        </div>
+        <h3>No Registrations Yet</h3>
+        <p>No one has registered for this event yet. Share your event to attract attendees!</p>
+    </div>
+
+    <!-- No Results State -->
+    <div class="empty-state" *ngIf="!isLoading && bookings.length > 0 && filteredBookings.length === 0">
+        <div class="empty-icon">
+            <span class="material-symbols-outlined">search_off</span>
+        </div>
+        <h3>No Matches Found</h3>
+        <p>No attendees match your search criteria. Try adjusting your filters.</p>
+    </div>
+
+    <!-- Attendee Table -->
+    <div class="attendees-table-container" *ngIf="!isLoading && filteredBookings.length > 0">
+        <table class="attendees-table">
+            <thead>
+                <tr>
+                    <th>Attendee</th>
+                    <th>Tickets</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Confirmation</th>
+                    <th>Booked On</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let booking of filteredBookings">
+                    <td class="attendee-cell">
+                        <div class="attendee-avatar">
+                            {{ booking.attendee_name?.charAt(0)?.toUpperCase() || '?' }}
+                        </div>
+                        <div class="attendee-info">
+                            <span class="attendee-name">{{ booking.attendee_name || 'Unknown' }}</span>
+                            <span class="attendee-email">{{ booking.attendee_email || 'No email' }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="ticket-count">{{ booking.tickets_booked }}</span>
+                    </td>
+                    <td>
+                        <span class="amount">${{ booking.total_price?.toFixed(2) || '0.00' }}</span>
+                    </td>
+                    <td>
+                        <span class="status-badge" [ngClass]="getStatusClass(booking.status)">
+                            {{ booking.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="confirmation-code">{{ booking.confirmation_code }}</span>
+                    </td>
+                    <td>
+                        <span class="booking-date">{{ formatDate(booking.booking_time) }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mobile Cards (for responsive view) -->
+    <div class="attendee-cards-mobile" *ngIf="!isLoading && filteredBookings.length > 0">
+        <div class="attendee-card-mobile" *ngFor="let booking of filteredBookings">
+            <div class="card-header">
+                <div class="attendee-avatar">
+                    {{ booking.attendee_name?.charAt(0)?.toUpperCase() || '?' }}
+                </div>
+                <div class="attendee-info">
+                    <span class="attendee-name">{{ booking.attendee_name || 'Unknown' }}</span>
+                    <span class="attendee-email">{{ booking.attendee_email || 'No email' }}</span>
+                </div>
+                <span class="status-badge" [ngClass]="getStatusClass(booking.status)">
+                    {{ booking.status }}
+                </span>
+            </div>
+            <div class="card-details">
+                <div class="detail-item">
+                    <span class="detail-label">Tickets</span>
+                    <span class="detail-value">{{ booking.tickets_booked }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Amount</span>
+                    <span class="detail-value">${{ booking.total_price?.toFixed(2) || '0.00' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Code</span>
+                    <span class="detail-value code">{{ booking.confirmation_code }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Booked</span>
+                    <span class="detail-value">{{ formatDate(booking.booking_time) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

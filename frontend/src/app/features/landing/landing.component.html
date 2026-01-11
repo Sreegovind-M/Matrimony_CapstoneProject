@@ -1,96 +1,307 @@
-<!-- NAVBAR -->
+<!-- ANIMATED NAVBAR -->
 <header class="landing-navbar">
-  <div class="landing-navbar__brand">
-    <span class="material-symbols-outlined navbar__brand-icon">
-      calendar_month
-    </span>
-
-    <span class="navbar__brand-text"> Smart Event Planner </span>
-
-    <span class="navbar__brand-text--mobile"> SEP </span>
+  <div class="landing-navbar__brand" routerLink="/">
+    <div class="brand-icon-wrapper">
+      <span class="emoji-icon">🎉</span>
+    </div>
+    <span class="navbar__brand-text">Smart Event Planner</span>
+    <span class="navbar__brand-text--mobile">SEP</span>
   </div>
 
-  <button class="landing-navbar__login" (click)="goToLogin()">Login</button>
+  <nav class="navbar__links">
+    <a (click)="scrollToSection('events')" class="nav-link">Events</a>
+    <a (click)="scrollToSection('features')" class="nav-link">Features</a>
+    <a (click)="scrollToSection('testimonials')" class="nav-link">Reviews</a>
+  </nav>
+
+  <div class="navbar__actions">
+    <button class="btn-outline" (click)="goToLogin()">Login</button>
+    <button class="btn-primary" (click)="goToSignup()">Get Started</button>
+  </div>
 </header>
 
 <main class="landing-container">
-  <!-- HERO -->
-  <section class="landing-hero">
-    <h2>Future-Proof Your Development Workflow</h2>
-    <p>Join world-class professionals at leading tech events.</p>
-    <button class="landing-primary-btn">View Events</button>
-  </section>
+  <!-- HERO SECTION WITH PARTICLES -->
+  <section class="hero-section">
+    <div class="hero-particles">
+      <div class="particle" *ngFor="let p of particles"></div>
+    </div>
 
-  <!-- TRENDING EVENTS -->
-  <section>
-    <h3 class="landing-section-title">Trending Events</h3>
-    <div class="landing-card-row">
-      <div class="landing-event-card" *ngFor="let event of trendingEvents">
-        <div
-          class="landing-event-card__image"
-          [style.backgroundImage]="'url(' + event.image + ')'"
-        ></div>
-        <div class="landing-event-card__body">
-          <span class="landing-event-tag">{{ event.category }}</span>
-          <h4>{{ event.title }}</h4>
-          <p class="muted">{{ event.location }}</p>
-          <p>{{ event.description }}</p>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="emoji-icon">✨</span>
+        <span>Discover Amazing Events</span>
+      </div>
+
+      <h1 class="hero-title">
+        Find Your Next
+        <span class="gradient-text">Unforgettable</span>
+        Experience
+      </h1>
+
+      <p class="hero-subtitle">
+        From electrifying concerts to inspiring workshops, discover events that spark joy,
+        ignite passion, and create memories that last a lifetime. ✨
+      </p>
+
+      <div class="hero-cta">
+        <button class="cta-primary" (click)="goToEvents()">
+          <span class="emoji-icon">🔍</span>
+          Explore Events
+        </button>
+        <button class="cta-secondary" (click)="goToSignup()">
+          <span class="emoji-icon">🚀</span>
+          Host Your Event
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number">{{ animatedStats.events }}+</span>
+          <span class="stat-label">Events Hosted</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">{{ animatedStats.users }}K+</span>
+          <span class="stat-label">Happy Attendees</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">{{ animatedStats.cities }}+</span>
+          <span class="stat-label">Cities Worldwide</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="floating-cards">
+        <div class="float-card card-1">
+          <span class="emoji-icon">🎵</span>
+          <span>Live Concerts</span>
+        </div>
+        <div class="float-card card-2">
+          <span class="emoji-icon">🍔</span>
+          <span>Food Festivals</span>
+        </div>
+        <div class="float-card card-3">
+          <span class="emoji-icon">🎮</span>
+          <span>Gaming Events</span>
+        </div>
+        <div class="float-card card-4">
+          <span class="emoji-icon">🎨</span>
+          <span>Art Shows</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CATEGORIES -->
-  <section>
-    <h3 class="landing-section-title">Events by Category</h3>
-    <div class="landing-category-grid">
-      <div class="landing-category-card" *ngFor="let cat of categories">
-        <span class="material-symbols-outlined">{{ cat.icon }}</span>
-        <h4>{{ cat.name }}</h4>
+  <!-- TRENDING EVENTS MARQUEE -->
+  <section class="marquee-section">
+    <div class="marquee-wrapper">
+      <div class="marquee-content">
+        <span class="marquee-item" *ngFor="let item of marqueeItems">
+          <span class="emoji-icon">{{ item.emoji || '🎯' }}</span>
+          {{ item.text }}
+        </span>
+        <span class="marquee-item" *ngFor="let item of marqueeItems">
+          <span class="emoji-icon">{{ item.emoji || '🎯' }}</span>
+          {{ item.text }}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED EVENTS -->
+  <section class="events-section" id="events">
+    <div class="section-header">
+      <span class="section-badge">🔥 Hot Right Now</span>
+      <h2 class="section-title">Trending Events</h2>
+      <p class="section-subtitle">Don't miss out on these amazing experiences happening near you!</p>
+    </div>
+
+    <div class="events-grid">
+      <div class="event-card glass-card" *ngFor="let event of featuredEvents; let i = index" [class.featured]="i === 0"
+        (click)="viewEvent(event)">
+        <div class="event-image" [style.backgroundImage]="'url(' + event.image_url + ')'">
+          <div class="event-overlay">
+            <span class="category-badge">{{ event.category_name || 'Event' }}</span>
+            <button class="wishlist-btn">
+              <span class="emoji-icon">❤️</span>
+            </button>
+          </div>
+        </div>
+        <div class="event-content">
+          <div class="event-meta">
+            <span class="event-date">
+              <span class="emoji-icon">📅</span>
+              {{ formatDate(event.date_time) }}
+            </span>
+            <span class="event-price" *ngIf="event.ticket_price > 0">${{ event.ticket_price }}</span>
+            <span class="event-price free" *ngIf="event.ticket_price === 0">FREE</span>
+          </div>
+          <h3 class="event-title">{{ event.name }}</h3>
+          <p class="event-location">
+            <span class="emoji-icon">📍</span>
+            {{ event.venue }}
+          </p>
+          <div class="event-footer">
+            <div class="attendees-preview">
+              <div class="avatar-stack">
+                <div class="avatar">👤</div>
+                <div class="avatar">👥</div>
+                <div class="avatar">+{{ event.capacity - (event.tickets_booked || 0) }}</div>
+              </div>
+              <span>{{ event.capacity - (event.tickets_booked || 0) }} spots left</span>
+            </div>
+            <button class="book-btn">Book Now →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-cta">
+      <button class="view-all-btn" (click)="goToEvents()">
+        View All Events
+        <span class="emoji-icon">→</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- CATEGORIES SHOWCASE -->
+  <section class="categories-section">
+    <div class="section-header">
+      <span class="section-badge">🎯 Explore</span>
+      <h2 class="section-title">Browse by Category</h2>
+      <p class="section-subtitle">Find events that match your interests and passions</p>
+    </div>
+
+    <div class="categories-grid">
+      <div class="category-card" *ngFor="let cat of categories" [style.--accent-color]="cat.color"
+        (click)="filterByCategory(cat)">
+        <div class="category-icon">
+          <span class="emoji-icon">{{ cat.emoji }}</span>
+        </div>
+        <h3>{{ cat.name }}</h3>
         <p>{{ cat.subtitle }}</p>
+        <span class="category-arrow">→</span>
       </div>
     </div>
   </section>
 
-  <!-- UPCOMING EVENTS -->
-  <section>
-    <h3 class="landing-section-title">Upcoming Events</h3>
-    <div class="landing-upcoming-grid">
-      <div class="landing-upcoming-card" *ngFor="let event of upcomingEvents">
-        <div
-          class="landing-upcoming-image"
-          [style.backgroundImage]="'url(' + event.image + ')'"
-        ></div>
-        <h4>{{ event.title }}</h4>
-        <p class="muted">{{ event.venue }}</p>
-        <button class="landing-link-btn">Book Now →</button>
+  <!-- FEATURES SECTION -->
+  <section class="features-section" id="features">
+    <div class="features-bg"></div>
+    <div class="section-header light">
+      <span class="section-badge">✨ Why Choose Us</span>
+      <h2 class="section-title">Everything You Need</h2>
+      <p class="section-subtitle">Powerful features to discover, book, and manage events effortlessly</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let feature of features">
+        <div class="feature-icon" [style.background]="feature.gradient">
+          <span class="emoji-icon">{{ feature.emoji }}</span>
+        </div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
       </div>
     </div>
   </section>
 
-  <!-- FEATURES -->
-  <section class="landing-features">
-    <div class="landing-feature" *ngFor="let f of features">
-      <span class="material-symbols-outlined">{{ f.icon }}</span>
-      <div>
-        <h4>{{ f.title }}</h4>
-        <p>{{ f.description }}</p>
+  <!-- TESTIMONIALS -->
+  <section class="testimonials-section" id="testimonials">
+    <div class="section-header">
+      <span class="section-badge">💬 Reviews</span>
+      <h2 class="section-title">Loved by Thousands</h2>
+      <p class="section-subtitle">See what our community has to say about their experiences</p>
+    </div>
+
+    <div class="testimonials-slider">
+      <div class="testimonial-card glass-card" *ngFor="let testimonial of testimonials">
+        <div class="testimonial-header">
+          <div class="testimonial-avatar">{{ testimonial.avatar }}</div>
+          <div class="testimonial-info">
+            <h4>{{ testimonial.name }}</h4>
+            <span>{{ testimonial.role }}</span>
+          </div>
+          <div class="testimonial-rating">
+            <span class="emoji-icon" *ngFor="let star of [1,2,3,4,5]">⭐</span>
+          </div>
+        </div>
+        <p class="testimonial-text">"{{ testimonial.text }}"</p>
+        <div class="testimonial-event">
+          <span class="emoji-icon">🎫</span>
+          Attended: {{ testimonial.event }}
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- HOST CTA -->
-  <section class="landing-cta">
-    <h2>Host Your Own Professional Event</h2>
-    <p>Join 5,000+ organizers using SmartPlanner.</p>
-    <button class="landing-cta-btn">Get Started for Free</button>
-  </section>
-
-  <!-- STATS -->
-  <section class="landing-stats">
-    <div class="landing-stat" *ngFor="let stat of stats">
-      <h3>{{ stat.value }}</h3>
-      <p>{{ stat.label }}</p>
+  <!-- CTA SECTION -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <div class="cta-emoji">🎉</div>
+      <h2>Ready to Create Unforgettable Moments?</h2>
+      <p>Join thousands of event enthusiasts and start your journey today. It's free!</p>
+      <div class="cta-buttons">
+        <button class="cta-btn primary" (click)="goToSignup()">
+          <span class="emoji-icon">👤</span>
+          Sign Up Free
+        </button>
+        <button class="cta-btn secondary" (click)="goToEvents()">
+          <span class="emoji-icon">🔍</span>
+          Browse Events
+        </button>
+      </div>
+    </div>
+    <div class="cta-confetti">
+      <div class="confetti-piece" *ngFor="let c of confetti"></div>
     </div>
   </section>
+
+  <!-- FOOTER -->
+  <footer class="landing-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <span class="emoji-icon">🎉</span>
+          <span>Smart Event Planner</span>
+        </div>
+        <p>Making every event memorable since 2024</p>
+        <div class="social-links">
+          <a href="#">📱</a>
+          <a href="#">📧</a>
+          <a href="#">🌐</a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Explore</h4>
+          <a>All Events</a>
+          <a>Categories</a>
+          <a>Trending</a>
+          <a>Near Me</a>
+        </div>
+        <div class="footer-column">
+          <h4>Organizers</h4>
+          <a>Create Event</a>
+          <a>Dashboard</a>
+          <a>Analytics</a>
+          <a>Pricing</a>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <a>Help Center</a>
+          <a>Contact Us</a>
+          <a>FAQ</a>
+          <a>Terms</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2024 Smart Event Planner. Made with 💜 for event lovers everywhere.</p>
+    </div>
+  </footer>
 </main>

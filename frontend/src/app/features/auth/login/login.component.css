@@ -136,12 +136,21 @@
 
 /* ERROR */
 .login-form__error {
-  display: none;
-  gap: 6px;
+  display: flex;
+  gap: 8px;
   align-items: center;
-  color: #e63946;
-  font-size: 12px;
-  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.login-form__error .material-symbols-outlined {
+  color: #ef4444;
+  font-size: 20px;
 }
 
 /* SUBMIT */
@@ -158,6 +167,11 @@
 
 .login-form__submit:hover {
   background: #26a89d;
+}
+
+.login-form__submit:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
 }
 
 /* FOOTER */

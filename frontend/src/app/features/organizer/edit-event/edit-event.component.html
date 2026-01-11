@@ -1,1 +1,196 @@
 <app-navbar></app-navbar>
+
+<div class="edit-event-container">
+    <div class="page-header">
+        <div class="header-content">
+            <button class="back-btn" (click)="cancel()">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Back to My Events
+            </button>
+            <h1>
+                <span class="material-symbols-outlined">edit</span>
+                Edit Event
+            </h1>
+            <p class="subtitle" *ngIf="eventName">Editing: {{ eventName }}</p>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Loading event details...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div class="alert alert-error" *ngIf="errorMessage">
+        <span class="material-symbols-outlined">error</span>
+        {{ errorMessage }}
+    </div>
+
+    <!-- Success Message -->
+    <div class="alert alert-success" *ngIf="successMessage">
+        <span class="material-symbols-outlined">check_circle</span>
+        {{ successMessage }}
+    </div>
+
+    <!-- Edit Form -->
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading" class="event-form">
+        <!-- Event Name -->
+        <div class="form-group">
+            <label for="name">
+                <span class="material-symbols-outlined">title</span>
+                Event Name *
+            </label>
+            <input type="text" id="name" formControlName="name" placeholder="Enter event name"
+                [class.error]="f['name'].touched && f['name'].invalid">
+            <div class="error-message" *ngIf="f['name'].touched && f['name'].errors?.['required']">
+                Event name is required
+            </div>
+            <div class="error-message" *ngIf="f['name'].touched && f['name'].errors?.['minlength']">
+                Event name must be at least 3 characters
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label for="description">
+                <span class="material-symbols-outlined">description</span>
+                Description *
+            </label>
+            <textarea id="description" formControlName="description" placeholder="Describe your event..." rows="4"
+                [class.error]="f['description'].touched && f['description'].invalid">
+      </textarea>
+            <div class="error-message" *ngIf="f['description'].touched && f['description'].errors?.['required']">
+                Description is required
+            </div>
+            <div class="error-message" *ngIf="f['description'].touched && f['description'].errors?.['minlength']">
+                Description must be at least 10 characters
+            </div>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+            <label for="category_id">
+                <span class="material-symbols-outlined">category</span>
+                Category *
+            </label>
+            <select id="category_id" formControlName="category_id"
+                [class.error]="f['category_id'].touched && f['category_id'].invalid">
+                <option value="">Select a category</option>
+                <option *ngFor="let category of categories" [value]="category.id">
+                    {{ category.name }}
+                </option>
+            </select>
+            <div class="error-message" *ngIf="f['category_id'].touched && f['category_id'].errors?.['required']">
+                Please select a category
+            </div>
+        </div>
+
+        <!-- Venue -->
+        <div class="form-group">
+            <label for="venue">
+                <span class="material-symbols-outlined">location_on</span>
+                Venue *
+            </label>
+            <input type="text" id="venue" formControlName="venue" placeholder="Venue name"
+                [class.error]="f['venue'].touched && f['venue'].invalid">
+            <div class="error-message" *ngIf="f['venue'].touched && f['venue'].errors?.['required']">
+                Venue is required
+            </div>
+        </div>
+
+        <!-- Venue Address -->
+        <div class="form-group">
+            <label for="venue_address">
+                <span class="material-symbols-outlined">pin_drop</span>
+                Venue Address
+            </label>
+            <input type="text" id="venue_address" formControlName="venue_address" placeholder="Full address">
+        </div>
+
+        <!-- Date and Time Row -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="date_time">
+                    <span class="material-symbols-outlined">calendar_today</span>
+                    Start Date & Time *
+                </label>
+                <input type="datetime-local" id="date_time" formControlName="date_time"
+                    [class.error]="f['date_time'].touched && f['date_time'].invalid">
+                <div class="error-message" *ngIf="f['date_time'].touched && f['date_time'].errors?.['required']">
+                    Start date and time is required
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="end_date_time">
+                    <span class="material-symbols-outlined">event</span>
+                    End Date & Time
+                </label>
+                <input type="datetime-local" id="end_date_time" formControlName="end_date_time">
+            </div>
+        </div>
+
+        <!-- Capacity and Price Row -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="capacity">
+                    <span class="material-symbols-outlined">groups</span>
+                    Capacity *
+                </label>
+                <input type="number" id="capacity" formControlName="capacity" placeholder="Max attendees" min="1"
+                    [class.error]="f['capacity'].touched && f['capacity'].invalid">
+                <div class="error-message" *ngIf="f['capacity'].touched && f['capacity'].errors?.['required']">
+                    Capacity is required
+                </div>
+                <div class="error-message" *ngIf="f['capacity'].touched && f['capacity'].errors?.['min']">
+                    Capacity must be at least 1
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ticket_price">
+                    <span class="material-symbols-outlined">payments</span>
+                    Ticket Price ($)
+                </label>
+                <input type="number" id="ticket_price" formControlName="ticket_price" placeholder="0 for free" min="0"
+                    step="0.01">
+            </div>
+        </div>
+
+        <!-- Image URL -->
+        <div class="form-group">
+            <label for="image_url">
+                <span class="material-symbols-outlined">image</span>
+                Image URL
+            </label>
+            <input type="url" id="image_url" formControlName="image_url" placeholder="https://example.com/image.jpg">
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+            <label for="status">
+                <span class="material-symbols-outlined">toggle_on</span>
+                Event Status
+            </label>
+            <select id="status" formControlName="status">
+                <option value="PUBLISHED">Published</option>
+                <option value="DRAFT">Draft</option>
+                <option value="CANCELLED">Cancelled</option>
+            </select>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="cancel()">
+                <span class="material-symbols-outlined">close</span>
+                Cancel
+            </button>
+            <button type="submit" class="btn-primary" [disabled]="isSubmitting || eventForm.invalid">
+                <span class="material-symbols-outlined" *ngIf="!isSubmitting">save</span>
+                <span class="spinner-small" *ngIf="isSubmitting"></span>
+                {{ isSubmitting ? 'Saving...' : 'Save Changes' }}
+            </button>
+        </div>
+    </form>
+</div>

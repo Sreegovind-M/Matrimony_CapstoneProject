@@ -15,14 +15,14 @@ USE event_planner;
 INSERT INTO categories (name, description, icon, color) VALUES
 ('Music', 'Concerts, festivals, and live music performances', 'music_note', '#E91E63'),
 ('Sports', 'Sports events, matches, and tournaments', 'sports_soccer', '#4CAF50'),
-('Technology', 'Tech conferences, hackathons, and workshops', 'computer', '#2196F3'),
-('Business', 'Business conferences, networking, and seminars', 'business', '#9C27B0'),
+('Technology', 'Tech conferences, hackathons, and workshops', 'devices', '#2196F3'),
+('Business', 'Business conferences, networking, and seminars', 'work', '#9C27B0'),
 ('Arts & Culture', 'Art exhibitions, theater, and cultural events', 'palette', '#FF9800'),
 ('Food & Drink', 'Food festivals, wine tastings, and culinary events', 'restaurant', '#795548'),
 ('Education', 'Workshops, courses, and educational seminars', 'school', '#607D8B'),
 ('Health & Wellness', 'Fitness events, yoga sessions, and wellness retreats', 'fitness_center', '#00BCD4'),
-('Entertainment', 'Comedy shows, magic shows, and entertainment events', 'theaters', '#F44336'),
-('Community', 'Community gatherings, charity events, and meetups', 'groups', '#8BC34A');
+('Entertainment', 'Comedy shows, magic shows, and entertainment events', 'theater_comedy', '#F44336'),
+('Community', 'Community gatherings, charity events, and meetups', 'group', '#8BC34A');
 
 -- ============================================================
 -- Insert Sample Users

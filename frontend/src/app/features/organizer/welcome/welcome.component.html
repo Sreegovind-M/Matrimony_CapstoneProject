@@ -1,0 +1,70 @@
+<section class="welcome">
+    <div class="welcome__container">
+        <!-- Confetti Animation Background -->
+        <div class="welcome__confetti">
+            <span *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]" class="confetti-piece"></span>
+        </div>
+
+        <!-- Welcome Card -->
+        <div class="welcome__card">
+            <!-- Success Icon -->
+            <div class="welcome__icon">
+                <span class="material-symbols-outlined">celebration</span>
+            </div>
+
+            <!-- Welcome Message -->
+            <h1 class="welcome__title">Welcome aboard, {{ userName }}! 🎉</h1>
+            <p class="welcome__subtitle">
+                Your organizer account has been created successfully. You're now ready to create amazing events!
+            </p>
+
+            <!-- Quick Start Guide -->
+            <div class="welcome__guide">
+                <h3 class="welcome__guide-title">Quick Start Guide</h3>
+                <div class="welcome__steps">
+                    <div class="welcome__step">
+                        <div class="welcome__step-number">1</div>
+                        <div class="welcome__step-content">
+                            <strong>Create Your Event</strong>
+                            <p>Add event details, set ticket prices, and choose a category</p>
+                        </div>
+                    </div>
+                    <div class="welcome__step">
+                        <div class="welcome__step-number">2</div>
+                        <div class="welcome__step-content">
+                            <strong>Publish & Share</strong>
+                            <p>Publish your event to make it visible to attendees</p>
+                        </div>
+                    </div>
+                    <div class="welcome__step">
+                        <div class="welcome__step-number">3</div>
+                        <div class="welcome__step-content">
+                            <strong>Manage Bookings</strong>
+                            <p>Track ticket sales and manage your attendees</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="welcome__actions">
+                <button class="welcome__btn welcome__btn--primary" (click)="createFirstEvent()">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    Create Your First Event
+                </button>
+                <button class="welcome__btn welcome__btn--secondary" (click)="exploreDashboard()">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Explore Dashboard
+                </button>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="welcome__tips">
+                <div class="welcome__tip">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                    <p><strong>Pro Tip:</strong> Add a compelling event image to attract more attendees!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

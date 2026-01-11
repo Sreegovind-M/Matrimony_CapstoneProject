@@ -22,46 +22,50 @@
     <div class="signup-role">
       <p class="signup-role__label">Register as</p>
       <div class="signup-role__options">
-        <button
-          type="button"
-          class="signup-role__option"
-          [class.signup-role__option--active]="selectedRole === 'ATTENDEE'"
-          (click)="selectRole('ATTENDEE')"
-        >
+        <button type="button" class="signup-role__option"
+          [class.signup-role__option--active]="selectedRole === 'ATTENDEE'" (click)="selectRole('ATTENDEE')">
           Attendee
         </button>
 
-        <button
-          type="button"
-          class="signup-role__option"
-          [class.signup-role__option--active]="selectedRole === 'ORGANIZER'"
-          (click)="selectRole('ORGANIZER')"
-        >
+        <button type="button" class="signup-role__option"
+          [class.signup-role__option--active]="selectedRole === 'ORGANIZER'" (click)="selectRole('ORGANIZER')">
           Organizer
         </button>
       </div>
     </div>
 
+    <!-- SUCCESS MESSAGE -->
+    <div class="signup-form__success" *ngIf="successMessage">
+      <span class="material-symbols-outlined">check_circle</span>
+      {{ successMessage }}
+    </div>
+
+    <!-- ERROR MESSAGE -->
+    <div class="signup-form__error" *ngIf="errorMessage">
+      <span class="material-symbols-outlined">error</span>
+      {{ errorMessage }}
+    </div>
+
     <!-- FORM -->
     <form class="signup-form" (ngSubmit)="submitForm()">
       <div class="signup-form__group">
-        <label>Full Name</label>
-        <input type="text" placeholder="John Doe" />
+        <label>Full Name <span class="required">*</span></label>
+        <input type="text" placeholder="John Doe" [(ngModel)]="fullName" name="fullName" required />
       </div>
 
       <div class="signup-form__group">
-        <label>Email Address</label>
-        <input type="email" placeholder="john@example.com" />
+        <label>Email Address <span class="required">*</span></label>
+        <input type="email" placeholder="john@example.com" [(ngModel)]="email" name="email" required />
       </div>
 
       <div class="signup-form__group">
         <label>Phone Number</label>
-        <input type="tel" placeholder="9876543210" />
+        <input type="tel" placeholder="9876543210" [(ngModel)]="phone" name="phone" />
       </div>
 
       <div class="signup-form__group signup-form__group--password">
-        <label>Password</label>
-        <input type="password" placeholder="••••••••" />
+        <label>Password <span class="required">*</span></label>
+        <input type="password" placeholder="••••••••" [(ngModel)]="password" name="password" required />
         <span class="material-symbols-outlined signup-form__lock"> lock </span>
       </div>
 
@@ -70,9 +74,9 @@
         <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
       </p>
 
-      <button type="submit" class="signup-form__submit">
-        Create Account
-        <span class="material-symbols-outlined">arrow_forward</span>
+      <button type="submit" class="signup-form__submit" [disabled]="isLoading">
+        {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+        <span class="material-symbols-outlined" *ngIf="!isLoading">arrow_forward</span>
       </button>
     </form>
 

@@ -4,17 +4,81 @@ import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 const router = express.Router();
 
-// GET all published events
-router.get('/', async (req: Request, res: Response) => {
+// GET all categories
+router.get('/categories', async (req: Request, res: Response) => {
   try {
     const [rows] = await pool.query<RowDataPacket[]>(`
+      SELECT id, name, description, icon, color
+      FROM categories
+      WHERE is_active = TRUE
+      ORDER BY name ASC
+    `);
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(500).json({ message: 'Error fetching categories' });
+  }
+});
+
+// GET all organizers with events
+router.get('/organizers', async (req: Request, res: Response) => {
+  try {
+    const [rows] = await pool.query<RowDataPacket[]>(`
+      SELECT DISTINCT u.id, u.name
+      FROM users u
+      INNER JOIN events e ON u.id = e.organizer_id
+      WHERE u.role = 'ORGANIZER' AND u.is_active = TRUE AND e.status = 'PUBLISHED'
+      ORDER BY u.name ASC
+    `);
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching organizers:', error);
+    res.status(500).json({ message: 'Error fetching organizers' });
+  }
+});
+
+// GET all published events with optional filters (excludes private events for attendees)
+router.get('/', async (req: Request, res: Response) => {
+  try {
+    const { category, organizer, search, include_private } = req.query;
+
+    let query = `
       SELECT e.*, c.name as category_name, u.name as organizer_name
       FROM events e
       LEFT JOIN categories c ON e.category_id = c.id
       LEFT JOIN users u ON e.organizer_id = u.id
       WHERE e.status = 'PUBLISHED'
-      ORDER BY e.date_time ASC
-    `);
+    `;
+
+    // Exclude private events from public list unless specifically requested
+    if (!include_private) {
+      query += ` AND (e.is_private = FALSE OR e.is_private IS NULL)`;
+    }
+
+    const params: (string | number)[] = [];
+
+    // Filter by category
+    if (category) {
+      query += ` AND e.category_id = ?`;
+      params.push(Number(category));
+    }
+
+    // Filter by organizer
+    if (organizer) {
+      query += ` AND e.organizer_id = ?`;
+      params.push(Number(organizer));
+    }
+
+    // Search by name or description
+    if (search) {
+      query += ` AND (e.name LIKE ? OR e.description LIKE ? OR e.venue LIKE ?)`;
+      const searchTerm = `%${search}%`;
+      params.push(searchTerm, searchTerm, searchTerm);
+    }
+
+    query += ` ORDER BY e.date_time ASC`;
+
+    const [rows] = await pool.query<RowDataPacket[]>(query, params);
     res.json(rows);
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -49,7 +113,7 @@ router.post('/', async (req: Request, res: Response) => {
     const {
       organizer_id, name, description, venue, venue_address,
       date_time, end_date_time, category_id, capacity,
-      ticket_price, image_url, status = 'DRAFT'
+      ticket_price, image_url, status = 'DRAFT', is_private = false
     } = req.body;
 
     if (!name || !venue || !date_time || !capacity || !organizer_id) {
@@ -60,12 +124,12 @@ router.post('/', async (req: Request, res: Response) => {
       INSERT INTO events (
         organizer_id, name, description, venue, venue_address,
         date_time, end_date_time, category_id, capacity, 
-        ticket_price, image_url, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ticket_price, image_url, status, is_private
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [
       organizer_id, name, description, venue, venue_address,
       date_time, end_date_time, category_id, capacity,
-      ticket_price || 0, image_url, status
+      ticket_price || 0, image_url, status, is_private ? 1 : 0
     ]);
 
     res.status(201).json({
@@ -84,7 +148,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     const {
       name, description, venue, venue_address,
       date_time, end_date_time, category_id, capacity,
-      ticket_price, image_url, status
+      ticket_price, image_url, status, is_private
     } = req.body;
 
     const [result] = await pool.query<ResultSetHeader>(`
@@ -99,12 +163,15 @@ router.put('/:id', async (req: Request, res: Response) => {
         capacity = COALESCE(?, capacity),
         ticket_price = COALESCE(?, ticket_price),
         image_url = COALESCE(?, image_url),
-        status = COALESCE(?, status)
+        status = COALESCE(?, status),
+        is_private = COALESCE(?, is_private)
       WHERE id = ?
     `, [
       name, description, venue, venue_address,
       date_time, end_date_time, category_id, capacity,
-      ticket_price, image_url, status, req.params.id
+      ticket_price, image_url, status,
+      is_private !== undefined ? (is_private ? 1 : 0) : null,
+      req.params.id
     ]);
 
     if (result.affectedRows === 0) {

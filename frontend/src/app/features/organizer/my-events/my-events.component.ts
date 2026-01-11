@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 import { EventService } from '../../../core/services/event.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Event } from '../../../core/models/event.model';
 
 type FilterType = 'all' | 'upcoming' | 'past' | 'draft';
@@ -25,7 +26,11 @@ export class MyEventsComponent implements OnInit {
   sortBy: SortType = 'date';
   viewMode: 'grid' | 'list' = 'grid';
 
-  constructor(private eventService: EventService) { }
+  constructor(
+    private eventService: EventService,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadEvents();
@@ -33,7 +38,15 @@ export class MyEventsComponent implements OnInit {
 
   loadEvents(): void {
     this.isLoading = true;
-    this.eventService.getAllEvents().subscribe({
+
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      this.isLoading = false;
+      return;
+    }
+
+    // Load only this organizer's events
+    this.eventService.getEventsByOrganizer(currentUser.id).subscribe({
       next: (events) => {
         this.allEvents = events;
         this.applyFilters();
@@ -58,8 +71,7 @@ export class MyEventsComponent implements OnInit {
         filtered = filtered.filter(e => new Date(e.date_time) <= now);
         break;
       case 'draft':
-        // Assuming draft events have a specific property or condition
-        filtered = [];
+        filtered = filtered.filter(e => e.status === 'DRAFT');
         break;
     }
 
@@ -127,7 +139,9 @@ export class MyEventsComponent implements OnInit {
     const eventDate = new Date(event.date_time);
     const now = new Date();
 
-    if (eventDate > now) {
+    if (event.status === 'DRAFT') {
+      return 'draft';
+    } else if (eventDate > now) {
       return 'upcoming';
     } else if (eventDate.toDateString() === now.toDateString()) {
       return 'today';
@@ -144,6 +158,8 @@ export class MyEventsComponent implements OnInit {
         return '#ed8936';
       case 'completed':
         return '#718096';
+      case 'draft':
+        return '#a0aec0';
       default:
         return '#718096';
     }
@@ -157,8 +173,19 @@ export class MyEventsComponent implements OnInit {
   }
 
   deleteEvent(eventId: number, eventName: string): void {
-    if (confirm(`Are you sure you want to delete "${eventName}"?`)) {
-      // Delete logic will be implemented with backend
+    if (confirm(`Are you sure you want to delete "${eventName}"? This action cannot be undone.`)) {
+      this.eventService.deleteEvent(eventId).subscribe({
+        next: () => {
+          // Remove from local array
+          this.allEvents = this.allEvents.filter(e => e.id !== eventId);
+          this.applyFilters();
+          alert('Event deleted successfully!');
+        },
+        error: (err: Error) => {
+          console.error('Error deleting event:', err);
+          alert('Failed to delete event. Please try again.');
+        }
+      });
     }
   }
 
@@ -173,7 +200,11 @@ export class MyEventsComponent implements OnInit {
 
   get pastCount(): number {
     const now = new Date();
-    return this.allEvents.filter(e => new Date(e.date_time) > now).length
+    return this.allEvents.filter(e => new Date(e.date_time) <= now).length;
+  }
+
+  get draftCount(): number {
+    return this.allEvents.filter(e => e.status === 'DRAFT').length;
   }
 
   getDefaultImage(categoryName: string | undefined): string {
@@ -193,14 +224,11 @@ export class MyEventsComponent implements OnInit {
   }
 
   editEvent(event: Event): void {
-    alert(`Edit Event functionality coming soon!\n\nEvent: ${event.name}\nID: ${event.id}`);
-    // TODO: Navigate to edit page or open modal
+    this.router.navigate(['/organizer/events', event.id, 'edit']);
   }
 
   viewAttendees(event: Event): void {
-    const booked = event.tickets_booked || 0;
-    alert(`Attendees for ${event.name}\n\nTotal Bookings: ${booked}\nCapacity: ${event.capacity}\nAvailable: ${event.capacity - booked}`);
-    // TODO: Navigate to attendees list or open modal
+    this.router.navigate(['/organizer/events', event.id, 'attendees']);
   }
 }
 

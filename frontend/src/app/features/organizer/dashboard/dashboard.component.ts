@@ -4,8 +4,8 @@ import { RouterModule } from '@angular/router';
 import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 import { EventService } from '../../../core/services/event.service';
 import { BookingService } from '../../../core/services/booking.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Event } from '../../../core/models/event.model';
-import { Booking } from '../../../core/models/booking.model';
 
 interface DashboardStats {
   totalEvents: number;
@@ -41,13 +41,18 @@ export class DashboardComponent implements OnInit {
   recentActivities: Activity[] = [];
   loading = true;
   error = '';
+  organizerName = '';
+  isNewOrganizer = false;
 
   constructor(
     private eventService: EventService,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
+    const currentUser = this.authService.getCurrentUser();
+    this.organizerName = currentUser?.name || 'Organizer';
     this.loadDashboardData();
   }
 
@@ -55,10 +60,20 @@ export class DashboardComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    // Load events
-    this.eventService.getAllEvents().subscribe({
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      this.error = 'User not authenticated';
+      this.loading = false;
+      return;
+    }
+
+    const organizerId = currentUser.id;
+
+    // Load only this organizer's events
+    this.eventService.getEventsByOrganizer(organizerId).subscribe({
       next: (events) => {
         this.stats.totalEvents = events.length;
+        this.isNewOrganizer = events.length === 0;
 
         const now = new Date();
         this.upcomingEvents = events
@@ -67,8 +82,20 @@ export class DashboardComponent implements OnInit {
 
         this.stats.upcomingEvents = events.filter(e => new Date(e.date_time) > now).length;
 
+        // Calculate total bookings and revenue from organizer's events
+        let totalBookings = 0;
+        let totalRevenue = 0;
+        events.forEach(event => {
+          const booked = event.tickets_booked || 0;
+          const price = event.ticket_price || 0;
+          totalBookings += booked;
+          totalRevenue += booked * price;
+        });
+        this.stats.totalBookings = totalBookings;
+        this.stats.totalRevenue = totalRevenue;
+
         // Generate recent activities from events
-        this.recentActivities = events.slice(0, 5).map((event, index) => ({
+        this.recentActivities = events.slice(0, 5).map((event) => ({
           id: event.id,
           type: 'event' as const,
           message: `Created event: ${event.name}`,
@@ -79,21 +106,8 @@ export class DashboardComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-
         this.error = 'Failed to load dashboard data';
         this.loading = false;
-      }
-    });
-
-    // Load bookings
-    this.bookingService.getAllBookings().subscribe({
-      next: (bookings: any) => {
-        this.stats.totalBookings = bookings.length;
-        // Assuming each booking represents revenue (could be multiplied by price)
-        this.stats.totalRevenue = bookings.length * 500; // Example: ₹500 per booking
-      },
-      error: (err: any) => {
-        // Handle error silently
       }
     });
   }

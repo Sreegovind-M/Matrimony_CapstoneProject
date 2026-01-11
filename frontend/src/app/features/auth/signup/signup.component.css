@@ -197,3 +197,52 @@
     display: inline;
   }
 }
+
+/* SUCCESS MESSAGE */
+.signup-form__success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(46, 196, 182, 0.1);
+  border: 1px solid #2ec4b6;
+  border-radius: 8px;
+  color: #0d9488;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.signup-form__success .material-symbols-outlined {
+  color: #2ec4b6;
+  font-size: 20px;
+}
+
+/* ERROR MESSAGE */
+.signup-form__error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.signup-form__error .material-symbols-outlined {
+  color: #ef4444;
+  font-size: 20px;
+}
+
+/* REQUIRED INDICATOR */
+.required {
+  color: #ef4444;
+}
+
+/* DISABLED BUTTON */
+.signup-form__submit:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}

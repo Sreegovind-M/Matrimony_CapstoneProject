@@ -4,41 +4,55 @@ import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 const router = express.Router();
 
-// Simple login (for demo purposes - no real auth)
+// Login with email and password validation
 router.post('/login', async (req: Request, res: Response) => {
     try {
-        const { email, role } = req.body;
+        const { email, password } = req.body;
 
-        // If email provided, try to find existing user
-        if (email) {
-            const [users] = await pool.query<RowDataPacket[]>(
-                'SELECT id, name, email, role FROM users WHERE email = ?',
-                [email]
-            );
-
-            if (users.length > 0) {
-                return res.json({
-                    success: true,
-                    user: users[0]
-                });
-            }
+        // Validate required fields
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email and password are required'
+            });
         }
 
-        // Otherwise, return a demo user based on role
-        const demoUsers: Record<string, { id: number; name: string; email: string; role: string }> = {
-            'ATTENDEE': { id: 1, name: 'Demo Attendee', email: 'attendee@demo.com', role: 'ATTENDEE' },
-            'ORGANIZER': { id: 2, name: 'Demo Organizer', email: 'organizer@demo.com', role: 'ORGANIZER' },
-            'ADMIN': { id: 3, name: 'Demo Admin', email: 'admin@demo.com', role: 'ADMIN' }
-        };
+        // Find user by email
+        const [users] = await pool.query<RowDataPacket[]>(
+            'SELECT id, name, email, role, password_hash FROM users WHERE email = ?',
+            [email]
+        );
 
-        const userRole = role || 'ATTENDEE';
+        if (users.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid email or password'
+            });
+        }
+
+        const user = users[0];
+
+        // Validate password (simplified for demo - use bcrypt in production!)
+        if (user.password_hash !== password) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid email or password'
+            });
+        }
+
+        // Return user with role from database
         res.json({
             success: true,
-            user: demoUsers[userRole] || demoUsers['ATTENDEE']
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
         });
     } catch (error) {
         console.error('Login error:', error);
-        res.status(500).json({ message: 'Login error' });
+        res.status(500).json({ success: false, message: 'Login error' });
     }
 });
 

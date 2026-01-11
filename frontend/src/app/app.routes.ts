@@ -11,6 +11,9 @@ import { MyBookingsComponent } from './features/booking/my-bookings/my-bookings.
 import { DashboardComponent } from './features/organizer/dashboard/dashboard.component';
 import { MyEventsComponent } from './features/organizer/my-events/my-events.component';
 import { CreateEventComponent } from './features/organizer/create-event/create-event.component';
+import { EditEventComponent } from './features/organizer/edit-event/edit-event.component';
+import { AttendeeListComponent } from './features/organizer/attendee-list/attendee-list.component';
+import { WelcomeComponent } from './features/organizer/welcome/welcome.component';
 import { UnauthorizedComponent } from './shared/unauthorized/unauthorized.component';
 import { LandingComponent } from './features/landing/landing.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
@@ -51,6 +54,12 @@ export const routes: Routes = [
   },
 
   {
+    path: 'organizer/welcome',
+    component: WelcomeComponent,
+    canActivate: [OrganizerGuard],
+  },
+
+  {
     path: 'organizer/dashboard',
     component: DashboardComponent,
     canActivate: [OrganizerGuard],
@@ -65,6 +74,18 @@ export const routes: Routes = [
   {
     path: 'organizer/create-event',
     component: CreateEventComponent,
+    canActivate: [OrganizerGuard],
+  },
+
+  {
+    path: 'organizer/events/:id/edit',
+    component: EditEventComponent,
+    canActivate: [OrganizerGuard],
+  },
+
+  {
+    path: 'organizer/events/:id/attendees',
+    component: AttendeeListComponent,
     canActivate: [OrganizerGuard],
   },
 

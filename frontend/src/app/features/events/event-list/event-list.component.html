@@ -2,11 +2,69 @@
 <section class="event-list">
   <!-- HEADER -->
   <header class="event-list__header">
-    <h1 class="event-list__title">Upcoming Events</h1>
+    <h1 class="event-list__title">Discover Events</h1>
     <p class="event-list__subtitle">
-      Discover and explore upcoming events happening near you.
+      Find and explore amazing events happening near you.
     </p>
   </header>
+
+  <!-- SEARCH & FILTERS -->
+  <div class="event-list__filters">
+    <!-- Search Bar -->
+    <div class="event-list__search">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" placeholder="Search events by name, venue, or description..." [value]="searchQuery"
+        (input)="onSearchInput($event)" class="event-list__search-input" />
+    </div>
+
+    <!-- Category Pills -->
+    <div class="event-list__categories">
+      <button class="category-pill" [class.category-pill--active]="selectedCategory === null"
+        (click)="selectCategory(null)">
+        <span class="material-symbols-outlined">apps</span>
+        All Events
+      </button>
+      <button *ngFor="let category of categories" class="category-pill"
+        [class.category-pill--active]="selectedCategory === category.id" (click)="selectCategory(category.id)">
+        <span class="material-symbols-outlined">{{ getCategoryIcon(category.icon) }}</span>
+        {{ category.name }}
+      </button>
+    </div>
+
+    <!-- Organizer Filter & Clear -->
+    <div class="event-list__filter-row">
+      <div class="event-list__organizer-filter">
+        <label>Filter by Organizer:</label>
+        <select [ngModel]="selectedOrganizer" (ngModelChange)="selectOrganizer($event)"
+          class="event-list__organizer-select">
+          <option [ngValue]="null">All Organizers</option>
+          <option *ngFor="let organizer of organizers" [ngValue]="organizer.id">
+            {{ organizer.name }}
+          </option>
+        </select>
+      </div>
+
+      <button *ngIf="hasActiveFilters()" class="event-list__clear-btn" (click)="clearFilters()">
+        <span class="material-symbols-outlined">close</span>
+        Clear Filters
+      </button>
+    </div>
+
+    <!-- Active Filters Display -->
+    <div *ngIf="hasActiveFilters()" class="event-list__active-filters">
+      <span class="material-symbols-outlined">filter_alt</span>
+      <span class="active-filters__label">Active Filters:</span>
+      <span *ngIf="searchQuery" class="active-filter-tag">
+        "{{ searchQuery }}"
+      </span>
+      <span *ngIf="selectedCategory" class="active-filter-tag">
+        {{ getCategoryName(selectedCategory) }}
+      </span>
+      <span *ngIf="selectedOrganizer" class="active-filter-tag">
+        by {{ getOrganizerName(selectedOrganizer) }}
+      </span>
+    </div>
+  </div>
 
   <!-- LOADING STATE -->
   <div *ngIf="loading" class="event-list__grid">
@@ -33,14 +91,18 @@
   <!-- EMPTY STATE -->
   <div *ngIf="!loading && !error && events.length === 0" class="event-list__state">
     <div class="event-list__empty-card">
-      <div class="event-list__empty-icon">📅</div>
+      <div class="event-list__empty-icon">🔍</div>
 
-      <h3 class="event-list__empty-title">No events available</h3>
+      <h3 class="event-list__empty-title">No events found</h3>
 
       <p class="event-list__empty-text">
-        We couldn't find any upcoming events at the moment. Please check back
-        later.
+        We couldn't find any events matching your criteria.
+        <span *ngIf="hasActiveFilters()">Try adjusting your filters or search terms.</span>
       </p>
+
+      <button *ngIf="hasActiveFilters()" class="event-list__retry-button" (click)="clearFilters()">
+        Clear Filters
+      </button>
     </div>
   </div>
 
