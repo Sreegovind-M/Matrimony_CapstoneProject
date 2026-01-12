@@ -1,7 +1,7 @@
 <section class="unauthorized">
   <!-- Top Navigation -->
   <header class="unauthorized__header">
-    <div class="unauthorized__brand">
+    <div class="unauthorized__brand" routerLink="/" style="cursor: pointer;">
       <span class="material-symbols-outlined unauthorized__brand-icon">
         event_available
       </span>
@@ -40,20 +40,14 @@
 
       <!-- Actions -->
       <div class="unauthorized__actions">
-        <button
-          class="unauthorized__login-button"
-          (click)="goToLogin()"
-        >
+        <button class="unauthorized__login-button" (click)="goToLogin()">
           Go to Login
           <span class="material-symbols-outlined">
             arrow_forward
           </span>
         </button>
 
-        <button
-          class="unauthorized__home-link"
-          (click)="goToHome()"
-        >
+        <button class="unauthorized__home-link" (click)="goToHome()">
           <span class="material-symbols-outlined">
             arrow_back
           </span>

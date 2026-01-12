@@ -34,11 +34,7 @@ export class NavbarComponent {
 
   navigateToHome(): void {
     this.closeMobileMenu();
-    if (this.role === 'ORGANIZER') {
-      this.router.navigate(['/organizer/dashboard']);
-    } else {
-      this.router.navigate(['/events']);
-    }
+    this.router.navigate(['/']);
   }
 
   navigateToCreateEvent(): void {
