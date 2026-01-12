@@ -64,6 +64,10 @@ export class LandingComponent implements OnInit, OnDestroy {
     { name: 'Arts', subtitle: 'Creative Expression', emoji: '🎨', color: 'linear-gradient(135deg, #4facfe, #00f2fe)' },
     { name: 'Sports', subtitle: 'Active Lifestyle', emoji: '⚽', color: 'linear-gradient(135deg, #43e97b, #38f9d7)' },
     { name: 'Business', subtitle: 'Networking & Growth', emoji: '💼', color: 'linear-gradient(135deg, #fa709a, #fee140)' },
+    { name: 'Wedding', subtitle: 'Celebrate Love', emoji: '💒', color: 'linear-gradient(135deg, #ff9a9e, #fecfef)' },
+    { name: 'Birthday', subtitle: 'Special Celebrations', emoji: '🎂', color: 'linear-gradient(135deg, #a18cd1, #fbc2eb)' },
+    { name: 'Anniversary', subtitle: 'Milestone Moments', emoji: '💑', color: 'linear-gradient(135deg, #ffecd2, #fcb69f)' },
+    { name: 'Corporate', subtitle: 'Professional Events', emoji: '🏢', color: 'linear-gradient(135deg, #667eea, #4facfe)' },
   ];
 
   // Features
@@ -103,6 +107,18 @@ export class LandingComponent implements OnInit, OnDestroy {
       description: 'Hassle-free cancellations with quick refunds directly to your payment method.',
       emoji: '↩️',
       gradient: 'linear-gradient(135deg, #a8edea, #fed6e3)'
+    },
+    {
+      title: 'Event Calendar',
+      description: 'Sync events to your calendar with one click and never miss an important date.',
+      emoji: '📅',
+      gradient: 'linear-gradient(135deg, #ff6b6b, #feca57)'
+    },
+    {
+      title: 'QR Tickets',
+      description: 'Digital QR code tickets for fast and contactless event entry.',
+      emoji: '📱',
+      gradient: 'linear-gradient(135deg, #5f27cd, #341f97)'
     }
   ];
 
