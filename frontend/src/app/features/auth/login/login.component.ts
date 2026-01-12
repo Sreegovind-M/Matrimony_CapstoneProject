@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -11,17 +11,25 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   email = '';
   password = '';
   showPassword = false;
   errorMessage = '';
   isLoading = false;
 
+  private returnUrl = '';
+
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
+
+  ngOnInit(): void {
+    // Get return URL from query params
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '';
+  }
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
@@ -47,16 +55,21 @@ export class LoginComponent {
       next: (response) => {
         this.isLoading = false;
         if (response.success && response.user) {
-          // Navigate based on user role from database
-          const role = response.user.role;
-          if (role === 'ATTENDEE') {
-            this.router.navigate(['/events']);
-          } else if (role === 'ORGANIZER') {
-            this.router.navigate(['/organizer/dashboard']);
-          } else if (role === 'ADMIN') {
-            this.router.navigate(['/admin/dashboard']);
+          // Check if there's a return URL
+          if (this.returnUrl) {
+            this.router.navigateByUrl(this.returnUrl);
           } else {
-            this.router.navigate(['/events']);
+            // Navigate based on user role from database
+            const role = response.user.role;
+            if (role === 'ATTENDEE') {
+              this.router.navigate(['/events']);
+            } else if (role === 'ORGANIZER') {
+              this.router.navigate(['/organizer/dashboard']);
+            } else if (role === 'ADMIN') {
+              this.router.navigate(['/admin/dashboard']);
+            } else {
+              this.router.navigate(['/events']);
+            }
           }
         } else {
           this.errorMessage = response.message || 'Login failed';
@@ -70,3 +83,4 @@ export class LoginComponent {
     });
   }
 }
+

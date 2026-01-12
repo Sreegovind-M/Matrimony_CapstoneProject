@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../../core/services/auth.service';
 
 interface Event {
     id: number;
@@ -22,7 +23,7 @@ interface Event {
 @Component({
     selector: 'app-public-event',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterModule],
     templateUrl: './public-event.component.html',
     styleUrls: ['./public-event.component.css']
 })
@@ -31,25 +32,13 @@ export class PublicEventComponent implements OnInit {
     loading = true;
     error = '';
 
-    // Booking form
-    showBookingForm = false;
-    bookingData = {
-        name: '',
-        email: '',
-        phone: '',
-        tickets: 1
-    };
-    bookingLoading = false;
-    bookingSuccess = false;
-    bookingError = '';
-    confirmationCode = '';
-
     private apiUrl = '/api';
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private http: HttpClient
+        private http: HttpClient,
+        private authService: AuthService
     ) { }
 
     ngOnInit(): void {
@@ -81,6 +70,10 @@ export class PublicEventComponent implements OnInit {
         return this.event.capacity - (this.event.tickets_booked || 0);
     }
 
+    get isLoggedIn(): boolean {
+        return this.authService.isLoggedIn();
+    }
+
     formatDate(dateString: string): string {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -93,61 +86,22 @@ export class PublicEventComponent implements OnInit {
         });
     }
 
-    openBookingForm(): void {
-        this.showBookingForm = true;
-        this.bookingError = '';
-    }
-
-    closeBookingForm(): void {
-        this.showBookingForm = false;
-        this.bookingData = { name: '', email: '', phone: '', tickets: 1 };
-        this.bookingError = '';
-    }
-
-    submitBooking(): void {
+    bookNow(): void {
         if (!this.event) return;
 
-        if (!this.bookingData.name || !this.bookingData.email) {
-            this.bookingError = 'Please enter your name and email';
-            return;
+        if (this.isLoggedIn) {
+            // User is logged in, go to ticket booking page
+            this.router.navigate(['/events', this.event.id, 'book']);
+        } else {
+            // User not logged in, redirect to login with return URL
+            this.router.navigate(['/login'], {
+                queryParams: { returnUrl: `/events/${this.event.id}/book` }
+            });
         }
-
-        if (this.bookingData.tickets < 1 || this.bookingData.tickets > this.availableSeats) {
-            this.bookingError = `Please select between 1 and ${this.availableSeats} tickets`;
-            return;
-        }
-
-        this.bookingLoading = true;
-        this.bookingError = '';
-
-        const payload = {
-            eventId: this.event.id,
-            name: this.bookingData.name,
-            email: this.bookingData.email,
-            phone: this.bookingData.phone,
-            tickets: this.bookingData.tickets
-        };
-
-        this.http.post<any>(`${this.apiUrl}/bookings/guest`, payload).subscribe({
-            next: (response) => {
-                this.bookingLoading = false;
-                this.bookingSuccess = true;
-                this.confirmationCode = response.confirmationCode;
-                this.showBookingForm = false;
-
-                // Update available seats
-                if (this.event) {
-                    this.event.tickets_booked = (this.event.tickets_booked || 0) + this.bookingData.tickets;
-                }
-            },
-            error: (err) => {
-                this.bookingLoading = false;
-                this.bookingError = err.error?.message || 'Failed to complete booking. Please try again.';
-            }
-        });
     }
 
     goHome(): void {
         this.router.navigate(['/']);
     }
 }
+

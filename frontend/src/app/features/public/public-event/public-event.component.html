@@ -78,79 +78,28 @@
             <span class="category-badge">{{ event.category_name }}</span>
         </div>
 
-        <!-- Booking Success Message -->
-        <div *ngIf="bookingSuccess" class="booking-success">
-            <div class="success-icon">✅</div>
-            <h2>Booking Confirmed!</h2>
-            <p>Your confirmation code:</p>
-            <div class="confirmation-code">{{ confirmationCode }}</div>
-            <p class="success-hint">Please save this code for check-in</p>
-        </div>
-
         <!-- Book Now Button -->
-        <div class="action-section" *ngIf="!bookingSuccess && availableSeats > 0">
-            <button class="btn-book" (click)="openBookingForm()">
-                <span class="btn-icon">🎟️</span>
-                Book Now
+        <div class="action-section" *ngIf="availableSeats > 0">
+            <button class="btn-book" (click)="bookNow()">
+                <span class="btn-icon" *ngIf="isLoggedIn">🎟️</span>
+                <span class="btn-icon" *ngIf="!isLoggedIn">🔐</span>
+                {{ isLoggedIn ? 'Book Now' : 'Login to Book' }}
             </button>
+            <p class="login-hint" *ngIf="!isLoggedIn">
+                Please login or create an account to book tickets
+            </p>
         </div>
 
         <!-- Sold Out Message -->
         <div class="sold-out" *ngIf="availableSeats <= 0">
             <span>😔 This event is sold out</span>
         </div>
-    </div>
 
-    <!-- Booking Modal -->
-    <div class="modal-overlay" *ngIf="showBookingForm" (click)="closeBookingForm()">
-        <div class="booking-modal" (click)="$event.stopPropagation()">
-            <button class="close-btn" (click)="closeBookingForm()">✕</button>
-
-            <h2>Book Your Tickets</h2>
-            <p class="modal-subtitle">{{ event?.name }}</p>
-
-            <form (ngSubmit)="submitBooking()" class="booking-form">
-                <div class="form-group">
-                    <label>Full Name *</label>
-                    <input type="text" [(ngModel)]="bookingData.name" name="name" placeholder="Enter your full name"
-                        required />
-                </div>
-
-                <div class="form-group">
-                    <label>Email Address *</label>
-                    <input type="email" [(ngModel)]="bookingData.email" name="email" placeholder="Enter your email"
-                        required />
-                </div>
-
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" [(ngModel)]="bookingData.phone" name="phone"
-                        placeholder="Enter phone number (optional)" />
-                </div>
-
-                <div class="form-group">
-                    <label>Number of Tickets *</label>
-                    <div class="ticket-selector">
-                        <button type="button" class="ticket-btn"
-                            (click)="bookingData.tickets > 1 && bookingData.tickets = bookingData.tickets - 1">−</button>
-                        <span class="ticket-count">{{ bookingData.tickets }}</span>
-                        <button type="button" class="ticket-btn"
-                            (click)="bookingData.tickets < availableSeats && bookingData.tickets = bookingData.tickets + 1">+</button>
-                    </div>
-                </div>
-
-                <div class="price-summary" *ngIf="event">
-                    <span>Total:</span>
-                    <span class="total-price">₹{{ (event.ticket_price || 0) * bookingData.tickets }}</span>
-                </div>
-
-                <div *ngIf="bookingError" class="error-message">{{ bookingError }}</div>
-
-                <button type="submit" class="btn-submit" [disabled]="bookingLoading">
-                    <span *ngIf="!bookingLoading">Confirm Booking</span>
-                    <span *ngIf="bookingLoading">Processing...</span>
-                </button>
-            </form>
+        <!-- Back to Home -->
+        <div class="back-section">
+            <button class="btn-secondary" (click)="goHome()">
+                ← Back to Home
+            </button>
         </div>
     </div>
 </div>
