@@ -1,0 +1,241 @@
+<app-navbar></app-navbar>
+
+<main class="profile-page">
+    <!-- Loading State -->
+    <div class="profile-loading" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Loading your profile...</p>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="profile-container" *ngIf="!isLoading && user">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-cover"></div>
+            <div class="profile-avatar-section">
+                <div class="profile-avatar">
+                    {{ getInitials() }}
+                </div>
+                <div class="profile-basic-info">
+                    <h1>{{ user.name }}</h1>
+                    <div class="profile-role">
+                        <span class="role-icon">{{ getRoleIcon() }}</span>
+                        <span>{{ getRoleDisplay() }}</span>
+                    </div>
+                </div>
+                <button class="edit-profile-btn" (click)="toggleEditMode()" *ngIf="!isEditing">
+                    <span class="material-symbols-outlined">edit</span>
+                    Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div class="message success-message" *ngIf="successMessage">
+            <span class="material-symbols-outlined">check_circle</span>
+            {{ successMessage }}
+        </div>
+        <div class="message error-message" *ngIf="errorMessage">
+            <span class="material-symbols-outlined">error</span>
+            {{ errorMessage }}
+        </div>
+
+        <!-- Profile Content Grid -->
+        <div class="profile-grid">
+            <!-- Left Column: Profile Info -->
+            <div class="profile-card info-card">
+                <div class="card-header">
+                    <h3>
+                        <span class="material-symbols-outlined">person</span>
+                        Personal Information
+                    </h3>
+                </div>
+
+                <!-- View Mode -->
+                <div class="info-list" *ngIf="!isEditing">
+                    <div class="info-item">
+                        <label>Full Name</label>
+                        <span>{{ user.name || 'Not set' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Email Address</label>
+                        <span>{{ user.email }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Phone Number</label>
+                        <span>{{ user.phone || 'Not set' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Account Type</label>
+                        <span class="role-badge">{{ getRoleDisplay() }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Member Since</label>
+                        <span>{{ getMemberSince() }}</span>
+                    </div>
+                </div>
+
+                <!-- Edit Mode -->
+                <div class="edit-form" *ngIf="isEditing">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <div class="input-wrapper">
+                            <span class="material-symbols-outlined">person</span>
+                            <input type="text" [(ngModel)]="editForm.name" placeholder="Your full name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <span class="material-symbols-outlined">email</span>
+                            <input type="email" [(ngModel)]="editForm.email" placeholder="your@email.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <div class="input-wrapper">
+                            <span class="material-symbols-outlined">phone</span>
+                            <input type="tel" [(ngModel)]="editForm.phone" placeholder="+1 234 567 8900">
+                        </div>
+                    </div>
+
+                    <div class="form-divider">
+                        <span>Change Password (Optional)</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <div class="input-wrapper">
+                            <span class="material-symbols-outlined">lock</span>
+                            <input type="password" [(ngModel)]="editForm.currentPassword"
+                                placeholder="Enter current password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <div class="input-wrapper">
+                            <span class="material-symbols-outlined">lock</span>
+                            <input type="password" [(ngModel)]="editForm.newPassword" placeholder="Enter new password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <div class="input-wrapper">
+                            <span class="material-symbols-outlined">lock</span>
+                            <input type="password" [(ngModel)]="editForm.confirmPassword"
+                                placeholder="Confirm new password">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-cancel" (click)="toggleEditMode()">Cancel</button>
+                        <button class="btn-save" (click)="saveProfile()" [disabled]="isSaving">
+                            <span *ngIf="!isSaving">
+                                <span class="material-symbols-outlined">save</span>
+                                Save Changes
+                            </span>
+                            <span *ngIf="isSaving">Saving...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Stats & Quick Actions -->
+            <div class="sidebar">
+                <!-- Account Stats -->
+                <div class="profile-card stats-card">
+                    <div class="card-header">
+                        <h3>
+                            <span class="material-symbols-outlined">analytics</span>
+                            Account Overview
+                        </h3>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item" *ngIf="user.role?.toLowerCase() === 'attendee'">
+                            <span class="stat-icon">🎟️</span>
+                            <span class="stat-value">{{ user.bookings_count || 0 }}</span>
+                            <span class="stat-label">Events Attended</span>
+                        </div>
+                        <div class="stat-item" *ngIf="user.role?.toLowerCase() === 'organizer'">
+                            <span class="stat-icon">📅</span>
+                            <span class="stat-value">{{ user.events_count || 0 }}</span>
+                            <span class="stat-label">Events Created</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">⭐</span>
+                            <span class="stat-value">{{ user.role?.toLowerCase() === 'organizer' ? 'Pro' : 'Active'
+                                }}</span>
+                            <span class="stat-label">Account Status</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="profile-card actions-card">
+                    <div class="card-header">
+                        <h3>
+                            <span class="material-symbols-outlined">bolt</span>
+                            Quick Actions
+                        </h3>
+                    </div>
+                    <div class="quick-actions">
+                        <a class="action-link" routerLink="/events" *ngIf="user.role?.toLowerCase() === 'attendee'">
+                            <span class="material-symbols-outlined">search</span>
+                            Browse Events
+                        </a>
+                        <a class="action-link" routerLink="/my-bookings"
+                            *ngIf="user.role?.toLowerCase() === 'attendee'">
+                            <span class="material-symbols-outlined">confirmation_number</span>
+                            My Bookings
+                        </a>
+                        <a class="action-link" routerLink="/organizer/dashboard"
+                            *ngIf="user.role?.toLowerCase() === 'organizer'">
+                            <span class="material-symbols-outlined">dashboard</span>
+                            Dashboard
+                        </a>
+                        <a class="action-link" routerLink="/organizer/create-event"
+                            *ngIf="user.role?.toLowerCase() === 'organizer'">
+                            <span class="material-symbols-outlined">add_circle</span>
+                            Create Event
+                        </a>
+                        <a class="action-link" routerLink="/organizer/my-events"
+                            *ngIf="user.role?.toLowerCase() === 'organizer'">
+                            <span class="material-symbols-outlined">event</span>
+                            My Events
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Security Card -->
+                <div class="profile-card security-card">
+                    <div class="card-header">
+                        <h3>
+                            <span class="material-symbols-outlined">security</span>
+                            Security
+                        </h3>
+                    </div>
+                    <div class="security-info">
+                        <div class="security-item">
+                            <span class="material-symbols-outlined">verified_user</span>
+                            <div>
+                                <strong>Email Verified</strong>
+                                <p>Your email is verified</p>
+                            </div>
+                        </div>
+                        <div class="security-item">
+                            <span class="material-symbols-outlined">lock</span>
+                            <div>
+                                <strong>Password</strong>
+                                <p>Last changed: Never</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

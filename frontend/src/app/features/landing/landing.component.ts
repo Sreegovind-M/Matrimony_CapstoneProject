@@ -273,14 +273,16 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   goToEvents(): void {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/events']);
   }
 
   viewEvent(event: Event): void {
-    this.router.navigate(['/login']);
+    // Navigate to public event page (no login required)
+    this.router.navigate(['/event', event.id]);
   }
 
   filterByCategory(category: any): void {
-    this.router.navigate(['/login']);
+    // Navigate to events page with category filter
+    this.router.navigate(['/events'], { queryParams: { category: category.name } });
   }
 }

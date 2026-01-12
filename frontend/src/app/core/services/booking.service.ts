@@ -26,11 +26,7 @@ export class BookingService {
   }
 
   getBookingById(id: number): Observable<Booking> {
-    return this.http.get<Booking>(`${this.baseUrl}/${id}`).pipe(
-      catchError(error => {
-        return of({} as Booking);
-      })
-    );
+    return this.http.get<Booking>(`${this.baseUrl}/${id}`);
   }
 
   getAllBookings(): Observable<Booking[]> {

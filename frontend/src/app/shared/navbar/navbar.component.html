@@ -37,11 +37,11 @@
     </span>
 
     <div class="navbar__avatar" [ngStyle]="{
-        'background-image':
-          role === 'ORGANIZER'
-            ? 'url(assets/avatar-organizer.png)'
-            : 'url(assets/avatar-attendee.png)'
-      }"></div>
+           'background-image':
+             role === 'ORGANIZER'
+               ? 'url(assets/avatar-organizer.png)'
+               : 'url(assets/avatar-attendee.png)'
+         }" (click)="navigateToProfile()" title="View Profile" style="cursor: pointer;"></div>
 
     <button class="navbar__logout" (click)="logout()">
       <span class="material-symbols-outlined">logout</span>

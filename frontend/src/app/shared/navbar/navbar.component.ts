@@ -37,6 +37,11 @@ export class NavbarComponent {
     this.router.navigate(['/']);
   }
 
+  navigateToProfile(): void {
+    this.closeMobileMenu();
+    this.router.navigate(['/profile']);
+  }
+
   navigateToCreateEvent(): void {
     this.closeMobileMenu();
     this.router.navigate(['/organizer/create-event']);

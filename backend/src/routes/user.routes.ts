@@ -142,4 +142,65 @@ router.get('/role/organizers', async (req: Request, res: Response) => {
     }
 });
 
+// PUT update user profile
+router.put('/:id', async (req: Request, res: Response) => {
+    try {
+        const userId = req.params.id;
+        const { name, email, phone, currentPassword, newPassword } = req.body;
+
+        // Get current user data
+        const [users] = await pool.query<RowDataPacket[]>(
+            'SELECT * FROM users WHERE id = ?',
+            [userId]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const user = users[0];
+
+        // If changing password, validate current password
+        if (newPassword) {
+            if (user.password_hash !== currentPassword) {
+                return res.status(400).json({ message: 'Current password is incorrect' });
+            }
+        }
+
+        // Check if email is being changed and if it's already taken
+        if (email !== user.email) {
+            const [existing] = await pool.query<RowDataPacket[]>(
+                'SELECT id FROM users WHERE email = ? AND id != ?',
+                [email, userId]
+            );
+            if (existing.length > 0) {
+                return res.status(400).json({ message: 'Email is already in use' });
+            }
+        }
+
+        // Build update query
+        let updateQuery = 'UPDATE users SET name = ?, email = ?, phone = ?';
+        const params: any[] = [name, email, phone || null];
+
+        if (newPassword) {
+            updateQuery += ', password_hash = ?';
+            params.push(newPassword);
+        }
+
+        updateQuery += ' WHERE id = ?';
+        params.push(userId);
+
+        await pool.query(updateQuery, params);
+
+        res.json({
+            success: true,
+            message: 'Profile updated successfully',
+            user: { id: userId, name, email, phone, role: user.role }
+        });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({ message: 'Error updating profile' });
+    }
+});
+
 export default router;

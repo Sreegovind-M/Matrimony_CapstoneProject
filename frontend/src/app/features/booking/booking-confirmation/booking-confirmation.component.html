@@ -25,25 +25,40 @@
       Your tickets have been successfully booked.
     </p>
 
-    <div class="booking__confirmation__summary">
+    <div class="booking__confirmation__summary" *ngIf="booking">
       <div class="booking__confirmation__item">
-        <label>Booking ID</label>
-        <span>#{{ booking.id }}</span>
+        <label>Confirmation Code</label>
+        <span>{{ booking.confirmation_code || 'N/A' }}</span>
       </div>
 
       <div class="booking__confirmation__item">
-        <label>Event ID</label>
-        <span>{{ booking.event_id }}</span>
+        <label>Booking ID</label>
+        <span>#{{ booking.id || 'N/A' }}</span>
+      </div>
+
+      <div class="booking__confirmation__item">
+        <label>Event</label>
+        <span>{{ booking.event_name || 'Event #' + booking.event_id }}</span>
       </div>
 
       <div class="booking__confirmation__item">
         <label>Tickets Booked</label>
-        <span>{{ booking.tickets_booked }}</span>
+        <span>{{ booking.tickets_booked || 0 }}</span>
+      </div>
+
+      <div class="booking__confirmation__item">
+        <label>Total Amount</label>
+        <span>${{ booking.total_price || '0.00' }}</span>
       </div>
 
       <div class="booking__confirmation__item">
         <label>Booking Time</label>
-        <span>{{ booking.booking_time | date : "medium" }}</span>
+        <span>{{ booking.booking_time ? (booking.booking_time | date : 'medium') : 'N/A' }}</span>
+      </div>
+
+      <div class="booking__confirmation__item">
+        <label>Status</label>
+        <span class="status-confirmed">{{ booking.status || 'CONFIRMED' }}</span>
       </div>
     </div>
 

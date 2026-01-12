@@ -27,7 +27,7 @@ export class BookingConfirmationComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.bookingId = Number(this.route.snapshot.paramMap.get('bookingId'));
+    this.bookingId = Number(this.route.snapshot.paramMap.get('id'));
     this.fetchBooking();
   }
 
@@ -35,12 +35,16 @@ export class BookingConfirmationComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
+    console.log('Fetching booking ID:', this.bookingId);
+
     this.bookingService.getBookingById(this.bookingId).subscribe({
       next: (res) => {
+        console.log('Booking data received:', res);
         this.booking = res;
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error fetching booking:', err);
         this.hasError = true;
         this.isLoading = false;
       }

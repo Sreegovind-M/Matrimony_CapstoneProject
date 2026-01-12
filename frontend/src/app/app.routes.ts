@@ -8,6 +8,8 @@ import { EventDetailsComponent } from './features/events/event-details/event-det
 import { TicketBookingComponent } from './features/events/ticket-booking/ticket-booking.component';
 import { BookingConfirmationComponent } from './features/booking/booking-confirmation/booking-confirmation.component';
 import { MyBookingsComponent } from './features/booking/my-bookings/my-bookings.component';
+import { PaymentComponent } from './features/booking/payment/payment.component';
+import { ProfileComponent } from './features/account/profile/profile.component';
 import { DashboardComponent } from './features/organizer/dashboard/dashboard.component';
 import { MyEventsComponent } from './features/organizer/my-events/my-events.component';
 import { CreateEventComponent } from './features/organizer/create-event/create-event.component';
@@ -23,6 +25,9 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: '', component: LandingComponent },
+
+  // Profile page (accessible to any logged-in user)
+  { path: 'profile', component: ProfileComponent },
 
   // Public event page (no auth required - for QR code scans)
   { path: 'event/:id', component: PublicEventComponent },
@@ -42,6 +47,12 @@ export const routes: Routes = [
   {
     path: 'events/:id/book',
     component: TicketBookingComponent,
+    canActivate: [AttendeeGuard],
+  },
+
+  {
+    path: 'payment',
+    component: PaymentComponent,
     canActivate: [AttendeeGuard],
   },
 

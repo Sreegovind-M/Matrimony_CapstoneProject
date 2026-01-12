@@ -55,26 +55,13 @@ export class TicketBookingComponent implements OnInit {
       return;
     }
 
-    this.isSubmitting = true;
-    this.errorMessage = '';
-
-    this.bookingService
-      .bookTickets({
+    // Navigate to payment page with event and ticket details
+    this.router.navigate(['/payment'], {
+      queryParams: {
         eventId: this.event.id,
-        seats: this.ticketCount,
-      })
-      .subscribe({
-        next: (booking) => {
-          // Navigate to booking confirmation page
-          this.router.navigate(['/booking-confirmation', booking.id]);
-        },
-        error: (err) => {
-          this.errorMessage =
-            err?.error?.message ||
-            'Requested number of tickets is not available';
-          this.isSubmitting = false;
-        },
-      });
+        tickets: this.ticketCount
+      }
+    });
   }
 
   onBack(): void {
