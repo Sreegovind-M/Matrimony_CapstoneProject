@@ -10,9 +10,9 @@ import { Booking } from '../models/booking.model';
 })
 export class BookingService {
 
-  private baseUrl = 'http://localhost:3000/api/bookings';
+  private baseUrl = '/api/bookings';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   bookTickets(data: {
     eventId: number;

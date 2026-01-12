@@ -6,7 +6,7 @@ import QRCode from 'qrcode';
  * @param baseUrl - The base URL of the frontend application
  * @returns Base64 encoded QR code image as data URL
  */
-export async function generateEventQRCode(eventId: number, baseUrl: string = 'http://localhost:4200'): Promise<string> {
+export async function generateEventQRCode(eventId: number, baseUrl: string = 'https://demetrice-shieldlike-tristan.ngrok-free.dev'): Promise<string> {
     const eventUrl = `${baseUrl}/event/${eventId}`;
 
     try {

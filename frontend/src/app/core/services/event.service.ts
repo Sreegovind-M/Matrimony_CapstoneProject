@@ -28,7 +28,7 @@ export interface EventFilters {
 })
 export class EventService {
 
-  private baseUrl = 'http://localhost:3000/api/events';
+  private baseUrl = '/api/events';
 
   constructor(private http: HttpClient) { }
 

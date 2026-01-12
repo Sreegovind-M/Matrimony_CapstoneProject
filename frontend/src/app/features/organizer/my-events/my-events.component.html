@@ -150,6 +150,10 @@
 
         <!-- Action Buttons -->
         <div class="event-actions">
+          <button class="action-btn btn-qr" (click)="showQRCode(event)" title="Show QR Code">
+            <span class="qr-emoji">📱</span>
+            QR
+          </button>
           <button class="action-btn btn-view" [routerLink]="['/events', event.id]" title="View Event">
             <span class="material-symbols-outlined">visibility</span>
             View
@@ -217,6 +221,9 @@
       </div>
       <div class="list-col col-actions">
         <div class="list-actions">
+          <button class="list-action-btn qr" (click)="showQRCode(event)" title="QR Code">
+            <span class="qr-emoji">📱</span>
+          </button>
           <button class="list-action-btn" [routerLink]="['/events', event.id]" title="View">
             <span class="material-symbols-outlined">visibility</span>
           </button>
@@ -230,6 +237,35 @@
             <span class="material-symbols-outlined">delete</span>
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QR Code Modal -->
+<div class="qr-modal-overlay" *ngIf="showQRModal" (click)="closeQRModal()">
+  <div class="qr-modal" (click)="$event.stopPropagation()">
+    <button class="qr-modal-close" (click)="closeQRModal()">✕</button>
+    <h2>Event QR Code</h2>
+    <p class="qr-event-name">{{ selectedEventForQR?.name }}</p>
+
+    <div class="qr-code-container" *ngIf="selectedEventForQR?.qr_code_url">
+      <img [src]="selectedEventForQR?.qr_code_url || ''" alt="Event QR Code" class="qr-image" />
+    </div>
+
+    <div class="no-qr-message" *ngIf="!selectedEventForQR?.qr_code_url">
+      <span class="no-qr-icon">⚠️</span>
+      <p>QR code not available for this event.</p>
+      <p class="no-qr-hint">Events created before the QR feature don't have QR codes.</p>
+    </div>
+
+    <div class="qr-share-url" *ngIf="selectedEventForQR">
+      <span class="url-label">Public Event URL:</span>
+      <div class="url-box">
+        <input type="text" readonly
+          [value]="'https://demetrice-shieldlike-tristan.ngrok-free.dev/event/' + (selectedEventForQR?.id || '')"
+          class="url-input" />
+        <button class="copy-btn" (click)="copyEventUrl(selectedEventForQR?.id || 0)">📋 Copy</button>
       </div>
     </div>
   </div>

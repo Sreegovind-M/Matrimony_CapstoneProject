@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 
 import eventRoutes from './routes/event.routes';
 import bookingRoutes from './routes/booking.routes';
@@ -13,7 +14,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:4200',
+  origin: true,  // Allow all origins for development (mobile access)
   credentials: true
 }));
 app.use(express.json());
@@ -24,15 +25,21 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/users', userRoutes);
 
 // Health check endpoint
-app.get('/', (req, res) => {
-  res.json({
-    status: 'running',
-    message: 'Smart Event Planner API is running successfully'
-  });
-});
-
 app.get('/api/health', (req, res) => {
   res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
+
+// Serve Angular static files in production
+const frontendPath = path.join(__dirname, '../../frontend/dist/frontend/browser');
+app.use(express.static(frontendPath));
+
+// SPA fallback - serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  // Don't serve index.html for API routes
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ message: 'API endpoint not found' });
+  }
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
@@ -49,6 +56,7 @@ const startServer = async () => {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
     console.log(`📡 API endpoints available at http://localhost:${PORT}/api`);
+    console.log(`🌐 Frontend served at http://localhost:${PORT}`);
   });
 };
 

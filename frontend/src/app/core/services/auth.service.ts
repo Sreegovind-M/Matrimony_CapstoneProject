@@ -19,7 +19,7 @@ interface RegisterResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:3000/api/users';
+  private readonly API_URL = '/api/users';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
 
   constructor(private http: HttpClient) {

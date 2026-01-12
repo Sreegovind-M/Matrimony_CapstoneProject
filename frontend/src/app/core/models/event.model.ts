@@ -16,6 +16,8 @@ export interface Event {
   image_url?: string;
   status?: string;
   is_featured?: boolean;
+  is_private?: boolean;
+  qr_code_url?: string;
   organizer_name?: string;
   created_at?: string;
   updated_at?: string;

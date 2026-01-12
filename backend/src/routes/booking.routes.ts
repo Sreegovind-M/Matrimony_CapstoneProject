@@ -225,7 +225,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.get('/event/:eventId', async (req: Request, res: Response) => {
   try {
     const [rows] = await pool.query<RowDataPacket[]>(`
-      SELECT b.*, u.name as attendee_name, u.email as attendee_email
+      SELECT b.*, u.name as attendee_name, u.email as attendee_email, u.phone as attendee_phone
       FROM bookings b
       JOIN users u ON b.attendee_id = u.id
       WHERE b.event_id = ?

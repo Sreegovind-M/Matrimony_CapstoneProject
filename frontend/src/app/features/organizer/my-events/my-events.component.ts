@@ -26,6 +26,10 @@ export class MyEventsComponent implements OnInit {
   sortBy: SortType = 'date';
   viewMode: 'grid' | 'list' = 'grid';
 
+  // QR Modal
+  showQRModal = false;
+  selectedEventForQR: Event | null = null;
+
   constructor(
     private eventService: EventService,
     private authService: AuthService,
@@ -229,6 +233,26 @@ export class MyEventsComponent implements OnInit {
 
   viewAttendees(event: Event): void {
     this.router.navigate(['/organizer/events', event.id, 'attendees']);
+  }
+
+  // QR Code Modal Methods
+  showQRCode(event: Event): void {
+    this.selectedEventForQR = event;
+    this.showQRModal = true;
+  }
+
+  closeQRModal(): void {
+    this.showQRModal = false;
+    this.selectedEventForQR = null;
+  }
+
+  copyEventUrl(eventId: number): void {
+    const url = `https://demetrice-shieldlike-tristan.ngrok-free.dev/event/${eventId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      alert('URL copied to clipboard!');
+    }).catch(() => {
+      alert('Failed to copy URL');
+    });
   }
 }
 

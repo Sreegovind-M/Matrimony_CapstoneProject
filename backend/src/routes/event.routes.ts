@@ -95,11 +95,11 @@ router.get('/public/:id', async (req: Request, res: Response) => {
       FROM events e
       LEFT JOIN categories c ON e.category_id = c.id
       LEFT JOIN users u ON e.organizer_id = u.id
-      WHERE e.id = ? AND e.status = 'PUBLISHED'
+      WHERE e.id = ?
     `, [req.params.id]);
 
     if (rows.length === 0) {
-      return res.status(404).json({ message: 'Event not found or not published' });
+      return res.status(404).json({ message: 'Event not found' });
     }
     res.json(rows[0]);
   } catch (error) {

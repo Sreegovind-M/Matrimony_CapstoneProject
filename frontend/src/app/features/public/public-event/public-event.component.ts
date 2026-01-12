@@ -44,7 +44,7 @@ export class PublicEventComponent implements OnInit {
     bookingError = '';
     confirmationCode = '';
 
-    private apiUrl = 'http://localhost:3000/api';
+    private apiUrl = '/api';
 
     constructor(
         private route: ActivatedRoute,

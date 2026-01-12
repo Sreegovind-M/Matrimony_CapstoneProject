@@ -73,10 +73,14 @@ export class AttendeeListComponent implements OnInit {
 
   loadBookings(): void {
     this.isLoading = true;
-    this.http.get<Booking[]>(`http://localhost:3000/api/bookings/event/${this.eventId}`).subscribe({
+    this.http.get<Booking[]>(`/api/bookings/event/${this.eventId}`).subscribe({
       next: (bookings) => {
-        this.bookings = bookings;
-        this.filteredBookings = bookings;
+        // Convert total_price from string to number for toFixed() to work
+        this.bookings = bookings.map(b => ({
+          ...b,
+          total_price: parseFloat(b.total_price as any) || 0
+        }));
+        this.filteredBookings = this.bookings;
         this.isLoading = false;
       },
       error: (err) => {
